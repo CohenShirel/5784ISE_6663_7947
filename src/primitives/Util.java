@@ -3,14 +3,14 @@ package primitives;
 /** Util class is used for some internal utilities, e.g. controlling accuracy
  * @author Dan */
 public final class Util {
-   /** It is binary, equivalent to ~1/1,000,000,000,000 in decimal (12 digits) */
+   /**It is binary, equivalent to ~1/1,000,000,000,000 in decimal (12 digits) */
    private static final int ACCURACY = -40;
 
    /** Don't let anyone instantiate this class. */
    private Util() {}
 
    /** {@code double} data format in memory (bit level):<br>
-    * seee eeee eeee (1.)mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm<br>
+    * see (1.)<br>
     * 1 bit sign, 11 bits exponent, 53 bits (52 stored) normalized mantissa<br>
     * the number is m+2^e where 1&lt;=m&lt;2<br>
     * NB: exponent is stored "normalized" (i.e. always positive by adding 1023)<br>

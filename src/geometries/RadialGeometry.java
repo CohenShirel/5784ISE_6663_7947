@@ -1,5 +1,8 @@
 package geometries;
 
-public class RadialGeometry {
-
+public abstract class RadialGeometry {
+ private double radius;
+ RadialGeometry(double radius){
+	 this.radius=radius;
+ }
 }

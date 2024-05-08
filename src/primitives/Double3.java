@@ -11,16 +11,16 @@ import static primitives.Util.isZero;
  */
 public class Double3 {
    /** First number */
-   final double     d1;
+   final double d1;
    /** Second number */
-   final double                d2;
+   final double d2;
    /** Third number */
-   final double                d3;
+   final double d3;
 
-   /** Zero triad (0,0,0) */
+   /** Zero tried (0,0,0) */
    public static final Double3 ZERO = new Double3(0, 0, 0);
 
-   /** One's triad (1,1,1) */
+   /** One's tried (1,1,1) */
    public static final Double3 ONE  = new Double3(1, 1, 1);
 
    /**
@@ -61,7 +61,7 @@ public class Double3 {
    public String toString() { return "(" + d1 + "," + d2 + "," + d3 + ")"; }
 
    /**
-    * Sum two floating point triads into a new triad where each couple of numbers
+    * Sum two floating point tried into a new tried where each couple of numbers
     * is summarized
     * @param  rhs right hand side operand for addition
     * @return     result of add
@@ -69,7 +69,7 @@ public class Double3 {
    public Double3 add(Double3 rhs) { return new Double3(d1 + rhs.d1, d2 + rhs.d2, d3 + rhs.d3); }
 
    /**
-    * Subtract two floating point triads into a new triad where each couple of
+    * Subtract two floating point tried into a new tried where each couple of
     * numbers is subtracted
     * @param  rhs right hand side operand for addition
     * @return     result of add
@@ -77,7 +77,7 @@ public class Double3 {
    public Double3 subtract(Double3 rhs) { return new Double3(d1 - rhs.d1, d2 - rhs.d2, d3 - rhs.d3); }
 
    /**
-    * Scale (multiply) floating point triad by a number into a new triad where
+    * Scale (multiply) floating point tried by a number into a new tried where
     * each
     * number is multiplied by the number
     * @param  rhs right hand side operand for scaling
@@ -86,7 +86,7 @@ public class Double3 {
    public Double3 scale(double rhs) { return new Double3(d1 * rhs, d2 * rhs, d3 * rhs); }
 
    /**
-    * Reduce (divide) floating point triad by a number into a new triad where each
+    * Reduce (divide) floating point tried by a number into a new tried where each
     * number is divided by the number
     * @param  rhs right hand side operand for reducing
     * @return     result of scale
@@ -94,7 +94,7 @@ public class Double3 {
    public Double3 reduce(double rhs) { return new Double3(d1 / rhs, d2 / rhs, d3 / rhs); }
 
    /**
-    * Product two floating point triads into a new triad where each couple of
+    * Product two floating point tried into a new tried where each couple of
     * numbers is multiplied
     * @param  rhs right hand side operand for product
     * @return     result of product
