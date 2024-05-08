@@ -6,8 +6,6 @@ public class Vector extends Point {
     // Constructor for creating a Vector object from a Double3 object.
     public Vector(Double3 xyz) {
         super(xyz);
-
-        // Ensure the vector is not a zero vector.
         if (xyz.equals(Double3.ZERO)) {
             throw new IllegalArgumentException("ZERO vector is not allowed");
         }
