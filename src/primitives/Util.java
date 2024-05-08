@@ -8,7 +8,6 @@ public final class Util {
 
    /** Don't let anyone instantiate this class. */
    private Util() {}
-
    /** {@code double} data format in memory (bit level):<br>
     * see (1.)<br>
     * 1 bit sign, 11 bits exponent, 53 bits (52 stored) normalized mantissa<br>

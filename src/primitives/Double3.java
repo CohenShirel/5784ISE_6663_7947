@@ -8,6 +8,7 @@ import static primitives.Util.isZero;
  * This class will serve all primitive classes based on three numbers
  * @author Dan Zilberstein
  */
+
 public class Double3 {
    /** First number */
    final double d1;

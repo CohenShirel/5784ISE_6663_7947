@@ -1,9 +1,16 @@
 package primitives;
 
-// This class represents a vector in 3D space.
+/**
+ * This class represents a vector in 3D space.
+ */
 public class Vector extends Point {
 
-    // Constructor for creating a Vector object from a Double3 object.
+    /**
+     * Constructor for creating a Vector object from a Double3 object.
+     *
+     * @param xyz The Double3 object representing the coordinates of the vector.
+     * @throws IllegalArgumentException If the input vector is the zero vector.
+     */
     public Vector(Double3 xyz) {
         super(xyz);
         if (xyz.equals(Double3.ZERO)) {
@@ -11,7 +18,14 @@ public class Vector extends Point {
         }
     }
 
-    // Constructor for creating a Vector object from individual coordinates.
+    /**
+     * Constructor for creating a Vector object from individual coordinates.
+     *
+     * @param x The x-coordinate of the vector.
+     * @param y The y-coordinate of the vector.
+     * @param z The z-coordinate of the vector.
+     * @throws IllegalArgumentException If the input vector is the zero vector.
+     */
     public Vector(double x, double y, double z) {
         super(x, y, z);
         if (xyz.equals(Double3.ZERO)) {
@@ -111,21 +125,18 @@ public class Vector extends Point {
         return new Vector(xyz.reduce(len));
     }
 
-    // Override equals method to compare Vector objects.
     @Override
     public boolean equals(Object o) {
-        return super.equals(o); // Delegate to superclass for equality check
+        return super.equals(o); 
     }
 
-    // Override hashCode method for consistent hashing.
     @Override
     public int hashCode() {
-        return super.hashCode(); // Delegate to superclass for hash code generation
+        return super.hashCode();
     }
 
-    // Override toString method to provide a string representation of the Vector object.
     @Override
     public String toString() {
-        return "Vector" + xyz; // Concatenate "Vector" with the coordinates
+        return "Vector" + xyz;
     }
 }
