@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Point{
 
-    protected final Double3 xyz;
+    final Double3 xyz;
     public static final Point ZERO = new Point(0, 0, 0);
     // Constructor to create a Point from x, y, z coordinates
     public Point(double x, double y, double z) {

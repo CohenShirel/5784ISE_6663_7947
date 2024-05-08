@@ -7,7 +7,7 @@ import primitives.Vector;
 // A class representing a cylinder geometry
 public class Cylinder extends Tube implements Geometry {
 
-    private double cylinderHeight; // Changed height to cylinderHeight for clarity
+    private double cylinderHeight; 
 
     // Constructor for the Cylinder class
     public Cylinder(Ray axisRay, double radius, double cylinderHeight) {
