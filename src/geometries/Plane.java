@@ -12,7 +12,7 @@ public class Plane implements Geometry {
         Vector U = point2.subtract(point1);
         Vector V = point3.subtract(point1);
         Vector W = U.crossProduct(V);
-        normal = W.normalize(); // Compute and normalize the normal vector
+        normal = W.normalize();
     }
 
     // Constructor that accepts a point and a normal vector
