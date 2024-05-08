@@ -8,7 +8,8 @@ import primitives.*;
 
 /**
  * Test program for the 1st stage
- * @author shirel cohen & neomi golkin
+ * @author1 Shirel Cohen\214377947\shirel4201@gmail.com
+ * @author2 Neomi Golkin\325946663\Neomigolkin@gmail.com
  */
 public final class Main {
 
