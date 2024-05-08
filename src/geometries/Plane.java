@@ -8,7 +8,7 @@ public class Plane implements Geometry {
 
  // Constructor that computes the normal from three points
     public Plane(Point point1, Point point2, Point point3) {
-        this.origin = point1; // Set one of the points as the origin
+        this.origin = point1;
         Vector U = point2.subtract(point1);
         Vector V = point3.subtract(point1);
         Vector W = U.crossProduct(V);
