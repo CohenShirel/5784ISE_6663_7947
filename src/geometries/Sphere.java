@@ -5,7 +5,7 @@ import primitives.Vector;
 
 // A class representing a Sphere geometry
 public class Sphere implements Geometry {
-     private Point center; // Changed _center to center for naming convention
+     private Point center;
      private double radius;
 
     // Constructor for the Sphere class
