@@ -8,7 +8,7 @@ import primitives.*;
 
 /**
  * Test program for the 1st stage
- * @author Dan Zilberstein
+ * @author shirel cohen & neomi golkin
  */
 public final class Main {
 
@@ -100,6 +100,7 @@ public final class Main {
       if (!isZero(v1.dotProduct(v2) + 28))
          out.println("ERROR: dotProduct() wrong value");
 
+      
       // test Cross-Product
       try { // test zero vector
          v1.crossProduct(v2);
