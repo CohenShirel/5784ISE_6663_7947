@@ -49,15 +49,14 @@ public class Point {
     }
 
     /**
-     * Adds the coordinates of another point to this point.
+     * Add a vector to a point
      *
-     * @param other The other point.
-     * @return A new Point object representing the sum of this point and the other point.
+     * @param vector The vector to add to the point.
+     * @return A new Point object.
      */
-    public Point add(Point other) {
-        return new Point(xyz.add(other.xyz));
+    public Point add(Vector vector) {
+        return new Point(xyz.add(vector.xyz));
     }
-
     /**
      * Calculates the squared distance between this point and another point.
      *
