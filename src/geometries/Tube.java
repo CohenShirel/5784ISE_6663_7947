@@ -9,8 +9,8 @@ import primitives.Vector;
  */
 public class Tube implements Geometry {
 
-    protected Ray axisRay;
-    protected double radius;
+    protected Ray _axisRay;
+    protected double _radius;
 
     /**
      * Constructs a new Tube object with a given axis ray and radius.
@@ -19,8 +19,8 @@ public class Tube implements Geometry {
      * @param radius  The radius of the tube.
      */
     public Tube(Ray axisRay, double radius) {
-        this.axisRay = axisRay;
-        this.radius = radius;
+        this._axisRay = axisRay;
+        this._radius = radius;
     }
     @Override
     public Vector getNormal(Point point) {
@@ -29,8 +29,8 @@ public class Tube implements Geometry {
     @Override
     public String toString() {
         return "Tube{" +
-                "axisRay=" + axisRay +
-                ", radius=" + radius +
+                "axisRay=" + _axisRay +
+                ", radius=" + _radius +
                 '}';
     }
 }
