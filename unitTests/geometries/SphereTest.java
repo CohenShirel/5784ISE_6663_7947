@@ -1,8 +1,10 @@
-package primitives;
+package geometries;
 
-import geometries.Sphere;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import primitives.Point;
+import primitives.Vector;
 
 class SphereTest {
 

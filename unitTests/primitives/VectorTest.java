@@ -1,4 +1,5 @@
-package geometries;
+package primitives;
+
 
 import org.junit.jupiter.api.Test;
 import primitives.Vector;
