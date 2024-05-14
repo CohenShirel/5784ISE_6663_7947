@@ -1,11 +1,5 @@
-/**
- * 
- */
-package unittests;
-
+package primitives;
 import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Vector;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;

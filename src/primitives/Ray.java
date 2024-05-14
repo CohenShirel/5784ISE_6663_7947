@@ -27,6 +27,13 @@ public class Ray {
         Ray ray = (Ray) o;
         return head.equals(ray.head) && direction.equals(ray.direction);
     }
+    //Getters
+    public Point getHead() {
+        return head;
+    }
+    public Vector getDir() {
+        return direction;
+    }
 
     @Override
     public int hashCode() {

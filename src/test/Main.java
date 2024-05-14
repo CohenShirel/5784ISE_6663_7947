@@ -1,5 +1,4 @@
 package test;
-
 import static java.lang.System.out;
 
 import static primitives.Util.isZero;
@@ -27,7 +26,6 @@ public final class Main {
       Vector v2         = new Vector(-2, -4, -6);
       Vector v3         = new Vector(0, 3, -2);
       Vector v4         = new Vector(1, 2, 2);
-
       // test zero vector =====================================================
       try {
          new Vector(0, 0, 0);
@@ -68,7 +66,6 @@ public final class Main {
          out.println("ERROR: distance between points to itself is wrong");
       if (!isZero(p3.distance(p1) - 3))
          out.println("ERROR: distance between points to itself is wrong");
-
       // Test Vector operations ===============================================
 
       // test length

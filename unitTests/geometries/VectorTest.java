@@ -67,7 +67,6 @@ class VectorTest {
         assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v3),
                 "crossProduct() for parallel vectors does not throw an exception");
     }
-
     /**
      * Test method for {@link Vector#lengthSquared()} (primitives.Vector)}.
      */

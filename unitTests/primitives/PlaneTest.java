@@ -1,8 +1,6 @@
-package unittests;
+package primitives;
 
 import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Vector;
 import geometries.Plane;
 
 import static org.junit.jupiter.api.Assertions.*;

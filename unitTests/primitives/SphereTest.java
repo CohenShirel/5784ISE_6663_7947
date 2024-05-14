@@ -1,13 +1,7 @@
-/**
- * 
- */
-package unittests;
+package primitives;
 
 import geometries.Sphere;
 import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Vector;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SphereTest {
