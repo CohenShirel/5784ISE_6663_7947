@@ -1,49 +1,60 @@
 package primitives;
-
 import java.util.Objects;
 
-/**
- * Represents a ray in 3D space, defined by an origin point and a direction vector.
- */
+import static primitives.Util.isZero;
+
+//Opening a Class for representation Ray
 public class Ray {
 
-    final Point head;
-    final Vector direction;
+    private final Point _p0;
+    private final Vector _dir;
 
-    /**
-     * Constructs a new Ray object with a given origin point and direction vector.
-     *
-     * @param p0  The origin point of the ray.
-     * @param dir The direction vector of the ray.
-     */
+    // Creating a constructor for the class Ray.
     public Ray(Point p0, Vector dir) {
-        head = p0;
-        direction = dir.normalize();
+        _p0 = p0;
+        _dir = dir.normalize();
     }
+
+    //Getters
+    public Point getP0() {
+        return _p0;
+    }
+
+    public Vector getDir() {
+        return _dir;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ray ray = (Ray) o;
-        return head.equals(ray.head) && direction.equals(ray.direction);
-    }
-    //Getters
-    public Point getHead() {
-        return head;
-    }
-    public Vector getDir() {
-        return direction;
+        return _p0.equals(ray._p0) && _dir.equals(ray._dir);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(head, direction);
+        return Objects.hash(_p0, _dir);
     }
+
     @Override
     public String toString() {
-        return "Ray{" +
-                "_p0=" + head +
-                ", _dir=" + direction +
+        return "primitives.Ray{" +
+                "_p0=" + _p0 +
+                ", _dir=" + _dir +
                 '}';
+    }
+
+    /**
+     *get Point at specific distance in the ray's direction
+     *
+     * @param t is a distance for reaching new Point
+     * @return new {@link Point}
+     */
+    public Point getPoint(double t) {
+        if(isZero(t)){
+            throw new IllegalArgumentException("t is equal to 0 produce an illegal ZERO vector");
+        }
+        return _p0.add(_dir.scale(t));
     }
 }

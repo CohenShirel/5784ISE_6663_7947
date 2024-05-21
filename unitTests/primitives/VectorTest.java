@@ -2,7 +2,8 @@ package primitives;
 
 
 import org.junit.jupiter.api.Test;
-import primitives.Vector;
+
+import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
 
@@ -14,6 +15,7 @@ class VectorTest {
 
     @Test
     void testZero() {
+        // =============== Boundary Values Tests ==================
         assertThrows(IllegalArgumentException.class, () ->
                 new Vector(0, 0, 0), "ERROR: zero vector does not throw an exception");
     }
@@ -68,6 +70,7 @@ class VectorTest {
         assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v3),
                 "crossProduct() for parallel vectors does not throw an exception");
     }
+
     /**
      * Test method for {@link Vector#lengthSquared()} (primitives.Vector)}.
      */
@@ -93,15 +96,12 @@ class VectorTest {
         Vector v = new Vector(0, 3, 4);
         Vector n = v.normalize();
 
-        // ============ Equivalence Partitions Tests ==============
-        // TC01: Simple test
-        assertFalse(v == n, "normalized() changes the vector itself");
+        // ============ Equivalence Partitions Tests ==============//
+        assertNotSame(v, n, "normalized() changes the vector");
         assertEquals(1d, n.lengthSquared(), 0.00001, "wrong normalized vector length");
-
         assertThrows(IllegalArgumentException.class,
                 () -> v.crossProduct(n),
                 "normalized vector is not in the same direction");
-
         assertEquals(new Vector(0, 0.6, 0.8), n, "wrong normalized vector");
     }
 }

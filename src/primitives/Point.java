@@ -2,50 +2,60 @@ package primitives;
 
 import java.util.Objects;
 
-/**
- * Represents a point in 3D space, defined by its coordinates.
- */
+// Creating a new class for point representation
 public class Point {
 
-    final Double3 xyz; 
-    
-    /**
-     * The origin point (0, 0, 0).
-     */
-    public static final Point ZERO = new Point(0, 0, 0);
+    final Double3 _xyz;
 
-    /**
-     * Constructs a new Point object with the specified coordinates.
-     *
-     * @param x The x-coordinate of the point.
-     * @param y The y-coordinate of the point.
-     * @param z The z-coordinate of the point.
-     */
+    // Creating a constructor that takes a Double3 object and creates a new Point object.
+    public Point(Double3 xyz) {
+        _xyz = xyz;
+    }
+
+    // Creating a constructor that takes three doubles and creates a new Point object.
     public Point(double x, double y, double z) {
-        this.xyz = new Double3(x, y, z);
+        _xyz = new Double3(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return _xyz.equals(point._xyz);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_xyz);
+    }
+
+    @Override
+    public String toString() {
+        return "Point " + _xyz;
+    }
+
+    // Calculating the distance between two points.
+    public double distanceSquared(Point point) {
+        double x1 = _xyz._d1;
+        double y1 = _xyz._d2;
+        double z1 = _xyz._d3;
+
+        double x2 = point._xyz._d1;
+        double y2 = point._xyz._d2;
+        double z2 = point._xyz._d3;
+
+        return ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1));
     }
 
     /**
-     * Constructs a new Point object from another Double3 object.
+     * Given a point, return the distance between the point and this point
      *
-     * @param other The Double3 object representing the coordinates of the point.
+     * @param point The point to measure the distance to.
+     * @return The distance between the two points.
      */
-    public Point(Double3 other) {
-        this.xyz = other;
-    }
-
-    /**
-     * Computes the vector from this point to another point.
-     *
-     * @param other The other point.
-     * @return The vector from this point to the other point.
-     */
-    public Vector subtract(Point other) {
-        Double3 result = xyz.subtract(other.xyz);
-        if (result.equals(Double3.ZERO)) {
-            throw new IllegalArgumentException("Resulting vector is a ZERO vector");
-        }
-        return new Vector(result);
+    double distance(Point point) {
+        return Math.sqrt(distanceSquared(point));
     }
 
     /**
@@ -55,45 +65,28 @@ public class Point {
      * @return A new Point object.
      */
     public Point add(Vector vector) {
-        return new Point(xyz.add(vector.xyz));
-    }
-    /**
-     * Calculates the squared distance between this point and another point.
-     *
-     * @param other The other point.
-     * @return The squared distance between this point and the other point.
-     */
-    public double distanceSquared(Point other) {
-        double dx = xyz.d1 - other.xyz.d1;
-        double dy = xyz.d2 - other.xyz.d2;
-        double dz = xyz.d3 - other.xyz.d3;
-        return dx * dx + dy * dy + dz * dz;
+        return new Point(_xyz.add(vector._xyz));
     }
 
-    /**
-     * Calculates the distance between this point and another point.
-     *
-     * @param other The other point.
-     * @return The distance between this point and the other point.
-     */
-    public double distance(Point other) {
-        return Math.sqrt(distanceSquared(other));
+
+    // Subtracting the point from the vector.
+    public Vector subtract(Point point) {
+
+        Double3 result = _xyz.subtract(point._xyz);
+
+        if (result.equals(Double3.ZERO)) {
+            throw new IllegalArgumentException("ZERO vector not allowed");
+        }
+        return new Vector(result);
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Point point = (Point) o;
-        return xyz.equals(point.xyz);
+
+    public double getX() {
+        return _xyz._d1;
     }
-    @Override
-    public int hashCode() {
-        return Objects.hash(xyz);
+    public double getY() {
+        return _xyz._d2;
     }
-    @Override
-    public String toString() {
-        return "Point{" +
-                "xyz=" + xyz +
-                '}';
+    public double getZ() {
+        return _xyz._d3;
     }
 }
