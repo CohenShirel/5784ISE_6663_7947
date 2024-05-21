@@ -69,37 +69,40 @@ public class Plane implements Geometry {
     @Override
     public List<Point> findIntersections(Ray ray) {
 
-        Point P0= ray.getP0(); // according to the illustration P0 is the same point of the ray's P0 (that's why the definition))
-        Vector v = ray.getDir(); // according to the illustration v is the same vector of the ray's vector (that's why the definition))
+        Point P0= ray.getP0(); 
+        Vector v = ray.getDir(); 
 
-        if(_q0.equals(P0)){ // if the ray starting from the plane it doesn't cut the plane at all
-            return null; // so return null
+        //בדיקה אם נקודת המוצא של הקרן היא על המישור
+        if(_q0.equals(P0)){ 
+            return null; 
         }
 
-        Vector n = _normal; // the normal to the plane
-
-        double nv = n.dotProduct(v); // the formula's denominator of "t" (t =(n*(Q-P0))/nv)
-
-        // ray is lying on the plane axis
-        if (isZero(nv)){ // can't divide by zero (nv is the denominator)
+        Vector n = _normal; 
+        double nv = n.dotProduct(v);//מכפלה סקלרית
+        // בדיקה אם הקרן מקבילה למישור
+        if (isZero(nv)){ 
             return null;
         }
 
-        Vector Q0_P0 = _q0.subtract(P0);
-        double nP0Q0= alignZero(n.dotProduct(Q0_P0));
+        Vector Q0_P0 = _q0.subtract(P0);//וקטור מנקודת המוצא של הקרן לנקודה על המישור
+        double nP0Q0= alignZero(n.dotProduct(Q0_P0));//המכפלה הסקלרית של הנורמל עם וקטור זה
 
-        // t should be bigger than 0
+        // בדיקה אם נקודת המוצא של הקרן נמצאת על המישור
         if(isZero(nP0Q0)){
             return null;
         }
-
+        //בדיקה שנקודת החיתוך נמצאת בכיוון החיובי 
+        //והקרן חוצה את המישור
         double t =alignZero(nP0Q0 / nv);
-
-        // t should be bigger than 0
         if(t<=0){
             return null;
         }
 
         return List.of(ray.getPoint(t));
     }
+    //האפשרויות הקיימות:
+    //הקרן מקבילה למישור,
+    //הקרן נמצאת על המישור,
+    //הקרן מתחילה על המישור ומתקדמת על המישור,
+    //והקרן חוצה את המישור בנקודה אחת
 }
