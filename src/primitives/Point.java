@@ -6,6 +6,7 @@ import java.util.Objects;
 public class Point {
 
     final Double3 _xyz;
+    public static final Point ZERO = new Point(0, 0, 0);
 
     // Creating a constructor that takes a Double3 object and creates a new Point object.
     public Point(Double3 xyz) {
@@ -54,7 +55,7 @@ public class Point {
      * @param point The point to measure the distance to.
      * @return The distance between the two points.
      */
-    double distance(Point point) {
+    public double distance(Point point) {
         return Math.sqrt(distanceSquared(point));
     }
 
