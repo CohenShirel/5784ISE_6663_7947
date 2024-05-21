@@ -23,8 +23,8 @@ public class Triangle extends Polygon implements Geometry{
     @Override
     public List<Point> findIntersections(Ray ray) {
 
-        // we take three vectors from the same starting point and connect them to the triangle's vertices
-        // we get a pyramid
+        //בדיקה אם ווקטור הכיוןן של הקרן עם המכפלה הסקלירית של הנורמל...במידה ושניהם בעלי אותו סימן 
+    	//אז הם חוצים את המשולש 
 
         //Check if the ray intersect the plane.
         if (_plane.findIntersections(ray) == null) {
@@ -41,7 +41,7 @@ public class Triangle extends Polygon implements Geometry{
         Vector n2 = v2.crossProduct(v3).normalize();
         Vector n3 = v3.crossProduct(v1).normalize();
 
-        // the ray's vector  - it has the same starting point as the three vectors from above
+        // the ray's direction vector  - it has the same starting point as the three vectors from above
         Vector v = ray.getDir();
 
         // check if the vector's direction (from Subtraction between the ray's vector to each vector from above) are equal

@@ -19,29 +19,28 @@ class GeometriesTest {
 
 
         // ============ Equivalence Partitions Tests ==============
-        //TC01: More then one object intersect (but not all the objects)
+        //בדיקה TC01: קרן שמצטלבת עם יותר מאובייקט אחד (אבל לא עם כולם)
         Ray rayManyObjectIntersect = new Ray(new Point(1, 1.5, 1), new Vector(0, -1, 0));
         assertEquals(3, geometries.findIntersections(rayManyObjectIntersect).size(),
                 "More then one object intersect (but not all the objects)");
 
         // =============== Boundary Values Tests ==================
         //TC10: Empty list
+        //בודקים קרן שלא מצטלבת עם אף אובייקט (כי הרשימה ריקה)
         Geometries geometriesEmptyList = new Geometries();
         Ray rayEmptyList = new Ray(new Point(1, 1, 1), new Vector(0, -1, 0));
-
         assertNull(geometriesEmptyList.findIntersections(rayEmptyList), "The List empty");
 
-        // TC11: No intersection with the objects
+        // TC11: אין חיתוך עם אף אחד מהאובייקטים
         Ray rayNoIntersections = new Ray(new Point(1, -1, 1), new Vector(0, -1, 0));
-
         assertNull(geometries.findIntersections(rayNoIntersections), "The ray suppose not intersect the objects");
 
-        //TC12: One object intersect
+        //TC12: חיתוך עם אובייקט אחד בלבד
         Ray rayOneObjectIntersect = new Ray(new Point(1.5, 1.5, 0.5), new Vector(0, 1, 0));
         assertEquals(1, geometries.findIntersections(rayOneObjectIntersect).size(),
                 "Suppose to be one intersection point (one object intersect)");
 
-        //TC13: All the objects intersect
+        //TC13: חיתוך עם כל האובייקטים
         Ray rayAllObjectIntersect = new Ray(new Point(1, 2.5, 1), new Vector(0, -1, 0));
         assertEquals(4, geometries.findIntersections(rayAllObjectIntersect).size(),
                 "Suppose to be 4 intersection points");

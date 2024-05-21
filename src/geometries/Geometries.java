@@ -24,13 +24,13 @@ public class Geometries implements Intersectable {
         Collections.addAll(_intersectables,intersectables);
     }
 
-    public void add(Intersectable... intersectables){
+    public void add(Intersectable...intersectables){
         Collections.addAll(_intersectables,intersectables);
     }
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        LinkedList<Point> points=null; // החזקת נקודות חיתוך עם כל אחתד מהקאומטרים
+        LinkedList<Point> points=null; // החזקת נקודות חיתוך עם כל אחתד מהגאומטרים
         for(var geometry: _intersectables){
             var geometryList=geometry.findIntersections(ray);
             if(geometryList!=null){

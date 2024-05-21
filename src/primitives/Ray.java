@@ -52,9 +52,12 @@ public class Ray {
      * @return new {@link Point}
      */
     public Point getPoint(double t) {
+    	//אם המרחק 0 מנקודת המוצא...ז"א שאין נקודה חדשה
         if(isZero(t)){
             throw new IllegalArgumentException("t is equal to 0 produce an illegal ZERO vector");
         }
+        //מכפלה של וקטור הכיוון
+        //dir בסקלר t
         return _p0.add(_dir.scale(t));
     }
 }

@@ -81,13 +81,31 @@ public class Point {
         return new Vector(result);
     }
 
+    /**
+     * Returns the X coordinate of the point/vector.
+     *
+     * @return the X coordinate as a double.
+     */
     public double getX() {
         return _xyz._d1;
     }
+
+    /**
+     * Returns the Y coordinate of the point/vector.
+     *
+     * @return the Y coordinate as a double.
+     */
     public double getY() {
         return _xyz._d2;
     }
+
+    /**
+     * Returns the Z coordinate of the point/vector.
+     *
+     * @return the Z coordinate as a double.
+     */
     public double getZ() {
         return _xyz._d3;
     }
+
 }
