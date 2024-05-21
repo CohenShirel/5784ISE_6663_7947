@@ -5,11 +5,14 @@ import primitives.Ray;
 import primitives.Vector;
 
 import java.io.PipedOutputStream;
+import java.util.List;
 
 //Creating a class to represent a cylinder
 public class Cylinder extends Tube implements Geometry {
 
-    private final double _height;
+
+
+	private final double _height;
 
     // Creating a constructor for the class Cylinder.
     public Cylinder(Ray axisRay, double radius, double height) {
@@ -60,4 +63,10 @@ public class Cylinder extends Tube implements Geometry {
 
         return v.normalize();
     }
+    @Override
+	public List<Point> findIntersections(Ray ray) {
+		// TODO Auto-generated method stub
+		//return super.findIntersections(ray);
+		return null;
+	}
 }
