@@ -25,7 +25,7 @@ public class Triangle extends Polygon implements Geometry{
 
         //בדיקה אם ווקטור הכיוןן של הקרן עם המכפלה הסקלירית של הנורמל...במידה ושניהם בעלי אותו סימן 
     	//אז הם חוצים את המשולש 
-
+//
         //Check if the ray intersect the plane.
         if (_plane.findIntersections(ray) == null) {
             return null;

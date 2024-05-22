@@ -1,5 +1,6 @@
 package geometries;
-
+import java.util.ArrayList;
+import java.util.Comparator;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -82,11 +83,16 @@ public class Sphere implements Geometry{
         double t1 = tm - th; // המרחק מנקודת המוצא לנקודת החיתוך הראשונה
         double t2 = tm + th; // המרחק מנקודת המוצא לנקודת החיתוך השנייה
 
+        List<Point> intersections = new ArrayList<>();
 //אם שניהם חויוביות יש לי שני נקודות חיתוך
         if (t1 > 0 && t2 > 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
-            return List.of(p1, p2);
+            intersections.add(p1);
+            intersections.add(p2);
+            // מיון הנקודות לפי המרחק מנקודת המוצא של הקרן
+            intersections.sort(Comparator.comparingDouble(p -> p.distance(p0)));
+            return intersections;
         }
 //אחד חיובי=נק' חיתוך אחת חיובית
         if (t1 > 0) {
