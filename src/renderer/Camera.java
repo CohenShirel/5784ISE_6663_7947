@@ -186,7 +186,6 @@ public class Camera implements Cloneable {
             this.camera._vUp = vUp.normalize();
             return this;
         }
-
         /**
          * Sets the size of the view plane.
          *
