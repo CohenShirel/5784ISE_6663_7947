@@ -127,29 +127,14 @@ public class Camera implements Cloneable {
     public double getDistance() {
         return _distance;
     }
-    //Chaining methods.
-
-    /**
-     * Set view plane distance
-     * @param distance - the distance between the camara and view plane
-     * @return The camara distance
-     */
-    public Camera setVPDistance(double distance) {
-        _distance = distance;
-        return this;
-    }
-
-    /**
-     * Set view plane size
-     * @param width width of the view plane
-     * @param height height of the view plane
-     * @return The view plane size
-     */
+   
     public Camera setVPSize(double width, double height) {
         _width = width;
         _height =height;
         return this;
     }
+  //Chaining methods.
+
     
     /**
      * Builder class for constructing Camera objects.
@@ -188,6 +173,22 @@ public class Camera implements Cloneable {
             this.camera._p0 = location;
             return this;
         }
+        /**
+         * Set view plane distance
+         * @param distance - the distance between the camara and view plane
+         * @return The camara distance
+         */
+        public Camera setVPDistance(double distance) {
+            this.camera._distance = distance;
+            return this.camera;
+        }
+
+        /**
+         * Set view plane size
+         * @param width width of the view plane
+         * @param height height of the view plane
+         * @return The view plane size
+         */
 
         /**
          * Sets the direction vectors of the camera.

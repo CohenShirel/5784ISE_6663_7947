@@ -49,13 +49,11 @@ public class CameraIntegrationsTest {
 
         Camera camera1 =  new Camera.Builder()
         	    .setVPDistance(1d)
-        	    .setVPSize(3d, 3d)
-        	    .build();
+        	    .setVPSize(3d, 3d);
 
         Camera camera2 =  new Camera.Builder()
         	    .setVPDistance(1d)
-        	    .setVPSize(3, 3)
-        	    .build();
+        	    .setVPSize(3, 3);
 
         //TC01: Sphere r=1 (2 intersections)
         assertEquals(2, countIntersectionsCameraGeometry(camera1, 3,3,
@@ -85,10 +83,9 @@ public class CameraIntegrationsTest {
      */
     @Test
     public void CameraRayTriangleIntegration() {
-        Camera cam =  new Camera.Builder()
+    	Camera cam = Camera.getBuilder()
         	    .setVPDistance(1d)
-        	    .setVPSize(3d, 3d)
-        	    .build();
+        	    .setVPSize(3d, 3d);
 
         //TC01: Small triangle (1 intersection)
         assertEquals(1, countIntersectionsCameraGeometry(cam,3,3,new Triangle(new Point(1, -1, -2),
@@ -109,8 +106,7 @@ public class CameraIntegrationsTest {
     public void CameraRayPlaneIntegration() {
         Camera camera = new Camera.Builder()
         	    .setVPDistance(1d)
-        	    .setVPSize(3d, 3d)
-        	    .build();
+        	    .setVPSize(3d, 3d);
 
         //TC01: The plane parallel to the View Plane (9 intersections)
         assertEquals(countIntersectionsCameraGeometry(camera,3,3 ,new Plane(new Point(0, 0, 5),
