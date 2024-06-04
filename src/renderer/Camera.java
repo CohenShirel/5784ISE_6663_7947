@@ -136,6 +136,7 @@ public class Camera {
             }
         }
     }
+   
 
     public void printGrid(int interval, Color color) {
         //=== running on the view plane===//
