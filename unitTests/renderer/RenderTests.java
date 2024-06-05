@@ -15,6 +15,7 @@ import scene.Scene;
  * @author Dan */
 public class RenderTests {
    /** Scene of the tests */
+	
    private final Scene          scene  = new Scene("Test scene");
    /** Camera builder of the tests */
    private final Camera.Builder camera = Camera.getBuilder()
