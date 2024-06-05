@@ -47,13 +47,21 @@ public class CameraIntegrationsTest {
     @Test
     public void CameraRaySphereIntegration() {
 
-        Camera camera1 =  new Camera.Builder()
+    	Camera camera1 = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0))
+                .setVPDistance(1d)
+                .setVPSize(3d, 3d);
+
+        Camera camera2 = new Camera(new Point(0, 0, 0.5), new Vector(0, 0, -1), new Vector(0, -1, 0))
+                .setVPDistance(1d)
+                .setVPSize(3, 3);
+    	
+       /* Camera camera4 =  new Camera.Builder()
         	    .setVPDistance(1d)
         	    .setVPSize(3d, 3d);
 
-        Camera camera2 =  new Camera.Builder()
+        Camera camera25 =  new Camera.Builder()
         	    .setVPDistance(1d)
-        	    .setVPSize(3, 3);
+        	    .setVPSize(3, 3);*/
 
         //TC01: Sphere r=1 (2 intersections)
         assertEquals(2, countIntersectionsCameraGeometry(camera1, 3,3,
@@ -83,9 +91,9 @@ public class CameraIntegrationsTest {
      */
     @Test
     public void CameraRayTriangleIntegration() {
-    	Camera cam = Camera.getBuilder()
-        	    .setVPDistance(1d)
-        	    .setVPSize(3d, 3d);
+    	Camera cam = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0))
+                .setVPDistance(1d)
+                .setVPSize(3d, 3d);
 
         //TC01: Small triangle (1 intersection)
         assertEquals(1, countIntersectionsCameraGeometry(cam,3,3,new Triangle(new Point(1, -1, -2),
@@ -104,9 +112,9 @@ public class CameraIntegrationsTest {
      */
     @Test
     public void CameraRayPlaneIntegration() {
-        Camera camera = new Camera.Builder()
-        	    .setVPDistance(1d)
-        	    .setVPSize(3d, 3d);
+    	 Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, 1), new Vector(0, -1, 0))
+                 .setVPDistance(1d)
+                 .setVPSize(3d, 3d);
 
         //TC01: The plane parallel to the View Plane (9 intersections)
         assertEquals(countIntersectionsCameraGeometry(camera,3,3 ,new Plane(new Point(0, 0, 5),

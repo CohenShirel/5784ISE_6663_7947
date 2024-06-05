@@ -24,6 +24,25 @@ public class Camera implements Cloneable {
      */
     private Camera() {
     }
+    /**
+     * constructor to initialize camera
+     *
+     * @param p0  - camera's location
+     * @param vTo - camera's towards direction
+     * @param vUp - camera's up direction
+     */
+    public Camera(Point p0, Vector vTo, Vector vUp) {
+
+        //The vectors vTo and vUp must be orthogonal//
+        if(!isZero(vTo.dotProduct(vUp))){
+            throw new IllegalArgumentException("vTo and vUp are not orthogonal");
+        }
+
+        _p0=p0;
+        _vTo =vTo.normalize();
+        _vUp =vUp.normalize();
+        _vRight =vTo.crossProduct(vUp);
+    }
     
     /**
      * Returns a new Builder instance for constructing a Camera object.
@@ -64,7 +83,6 @@ public class Camera implements Cloneable {
         }
         return new Ray(_p0, Pij.subtract(_p0));
     }
-    
     /**
      * Gets the location of the camera.
      *
@@ -133,6 +151,11 @@ public class Camera implements Cloneable {
         _height =height;
         return this;
     }
+    public Camera setVPDistance(double distance) {
+        this._distance = distance;
+        return this;
+    }
+
   //Chaining methods.
 
     
@@ -178,10 +201,11 @@ public class Camera implements Cloneable {
          * @param distance - the distance between the camara and view plane
          * @return The camara distance
          */
-        public Camera setVPDistance(double distance) {
+        public Builder setVPDistance(double distance) {
             this.camera._distance = distance;
-            return this.camera;
+            return this;
         }
+
 
         /**
          * Set view plane size
