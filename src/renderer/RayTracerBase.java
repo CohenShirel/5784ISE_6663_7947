@@ -6,7 +6,7 @@ import primitives.Color;
 import primitives.Ray;
 import scene.Scene;
 
-public abstract class RayTracer {
+public abstract class RayTracerBase {
     // The scene object to follow the ray's intersect with its geometries objects//
     protected Scene scene;
 
@@ -14,7 +14,7 @@ public abstract class RayTracer {
      * Constructor that get a scene
      * @param scene
      */
-    public RayTracer(Scene scene){
+    public RayTracerBase(Scene scene){
         this.scene = scene;
     }
 
@@ -26,5 +26,5 @@ public abstract class RayTracer {
      * @param ray
      * @return
      */
-    abstract Color traceRay(Ray ray);
+    public abstract Color traceRay(Ray ray);
 }

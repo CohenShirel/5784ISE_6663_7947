@@ -60,7 +60,7 @@ public class Ray {
         }
         return this.p0.add(this.dir.scale(t));
     }
-
+    //Return the point that it is the closest to the ray
     public Point findClosestPoint(List<Point> pointList) {
         Point closestPoint = null;
         double minDistance = Double.MAX_VALUE;

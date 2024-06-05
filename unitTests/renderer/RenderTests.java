@@ -35,7 +35,7 @@ public class RenderTests {
 				.setVPDistance(100)
 				.setVPSize(500, 500)
 				.setImageWriter(new ImageWriter("base render test", 1000, 1000))
-				.setRayTracer(new RayTracerBasic(scene));
+				.setRayTracer(new RayTracerBase(scene));
 
 		camera.renderImage();
 		camera.printGrid(50, new Color(java.awt.Color.YELLOW));
