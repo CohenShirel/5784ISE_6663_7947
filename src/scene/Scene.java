@@ -54,6 +54,8 @@ public class Scene {
             return this;
         }
 
+        
+        
         public Scene build() {
             Scene scene = new Scene(this.name);
             scene.background = this.background;
