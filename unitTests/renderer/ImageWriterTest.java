@@ -24,7 +24,7 @@ class ImageWriterTest {
         for (int i = 0; i < nX; i++) {
             for (int j = 0; j < nY; j++) {
                 //=== create the net ===//
-                if (i % 50 == 0 || j % 50 == 0) {
+                if (i % 30 == 0 || j % 30 == 0) {
                     imageWriter.writePixel(i, j, redColor);
                 }
                 else {
