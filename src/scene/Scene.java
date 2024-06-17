@@ -43,6 +43,7 @@ public class Scene {
             this.background = background;
             return this;
         }
+        
 
         public SceneBuilder setAmbientLight(AmbientLight ambientLight) {
             this.ambientLight = ambientLight;
