@@ -1,4 +1,3 @@
-
 package renderer;
 
 import primitives.Color;
@@ -8,7 +7,7 @@ import scene.Scene;
 
 import java.util.List;
 
-public class SimpleRayTrancer extends RayTracerBase{
+public class SimpleRayTrancer extends RayTracerBase {
     public SimpleRayTrancer(Scene scene) {
         super(scene);
     }
@@ -20,22 +19,23 @@ public class SimpleRayTrancer extends RayTracerBase{
      */
     @Override
     public Color traceRay(Ray ray) {
-
-        List<Point> intersections  = this.scene.geometries.findIntersections(ray);
+        List<Point> intersections = this.scene.getGeometries().findIntersections(ray);
 
         if (intersections == null)
-            return this.scene.background;
+            return this.scene.getBackground();
 
         Point closestPoint = ray.findClosestPoint(intersections);
 
         return calcColor(closestPoint);
     }
+
     /**
      * Get the color of an intersection point
      * @param point point of intersection
      * @return Color of the intersection point
      */
     private Color calcColor(Point point) {
-        return this.scene.ambientLight.getIntensity();
+        return this.scene.getAmbientLight().getIntensity();
     }
 }
+

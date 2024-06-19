@@ -4,34 +4,41 @@ import lighting.AmbientLight;
 import geometries.Geometries;
 import primitives.Color;
 
-/**
- * Scene class representing a 3D scene with a name, background color, ambient light, and geometries.
- */
+//================== Scene class (PDS - Plain Data Structure) ==================//
 public class Scene {
 
-    //==== PDS - all fields are public ====//
-    public final String name; // the scene's name
-    public Color background; // the background's color (black is the default)
-    public AmbientLight ambientLight; // the ambientLight - תאורה סביבתית
-    public Geometries geometries; // the 3D model
+    //==== we use with design pattern called "builder pattern" ====//
+    private final String name; // the scene's name
+    private final Color background; // the background's color (black is the default)
+    private final AmbientLight ambientLight; //the ambientLight - תאורה סביבתית
+    private final Geometries geometries; // the 3D model
 
-    /**
-     * Constructor that initializes the scene's name
-     * @param name the scene's name
-     */
-    public Scene(String name) {
-        this.name = name;
-        this.background = Color.BLACK;
-        this.ambientLight = AmbientLight.NONE;
-        this.geometries = new Geometries();
+    public String getName() {
+        return name;
+    }
+    public Color getBackground() {
+        return background;
+    }
+    public AmbientLight getAmbientLight() {
+        return ambientLight;
+    }
+    public Geometries getGeometries() {
+        return geometries;
+    }
+
+    private Scene(SceneBuilder builder) {
+        this.name = builder.name;
+        this.background = builder.background;
+        this.ambientLight = builder.ambientLight;
+        this.geometries = builder.geometries;
     }
 
     //================== SceneBuilder class ==================//
     public static class SceneBuilder {
         private final String name; // the scene's name
-        private Color background = Color.BLACK; // the background's color (black is the default)
-        private AmbientLight ambientLight = AmbientLight.NONE; // the ambientLight
-        private Geometries geometries = new Geometries(); // the 3D model
+        private Color background; // the background's color (black is the default)
+        private AmbientLight ambientLight; //the ambientLight
+        private Geometries geometries; // the 3D model
 
         public SceneBuilder(String name){
             this.name = name;
@@ -43,7 +50,6 @@ public class Scene {
             this.background = background;
             return this;
         }
-        
 
         public SceneBuilder setAmbientLight(AmbientLight ambientLight) {
             this.ambientLight = ambientLight;
@@ -55,14 +61,6 @@ public class Scene {
             return this;
         }
 
-        
-        
-        public Scene build() {
-            Scene scene = new Scene(this.name);
-            scene.background = this.background;
-            scene.ambientLight = this.ambientLight;
-            scene.geometries = this.geometries;
-            return scene;
-        }
+        public Scene build(){return new Scene(this);}
     }
 }
