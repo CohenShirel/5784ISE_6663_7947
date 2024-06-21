@@ -16,6 +16,7 @@ public class Double3 {
      * Zero triad (0,0,0)
      */
     public static final Double3 ZERO = new Double3(0, 0, 0);
+    public static final Double3 ONE = new Double3(1, 1, 1);
 
     /**
      * Constructor to initialize Double3 based object with its three number values
@@ -29,6 +30,16 @@ public class Double3 {
         _d2 = d2;
         _d3 = d3;
     }
+    /**
+	 * Constructor to initialize Double3 based object the same number values
+	 * 
+	 * @param value number value for all 3 numbers
+	 */
+	public Double3(double value) {
+		this._d1 = value;
+		this._d2 = value;
+		this._d3 = value;
+	}
 
     @Override
     public boolean equals(Object obj) {

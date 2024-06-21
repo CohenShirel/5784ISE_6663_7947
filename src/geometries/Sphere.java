@@ -8,7 +8,7 @@ import primitives.Vector;
 import java.util.List;
 import java.util.Objects;
 
-public class Sphere implements Geometry{
+public class Sphere extends Geometry{
     private final Point _center;
     private final double _radius;
 
@@ -58,53 +58,44 @@ public class Sphere implements Geometry{
     }
 
     @Override
-    //3 בדיקות לנק' חיתוך
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        Point p0 = ray.getP0(); // ray's starting point
+        Point O = this._center; //the sphere's center point
+        Vector V = ray.getDir(); // "the v vector" from the presentation
 
-    	Point p0 = ray.getP0(); // נקודת המוצא של הקרן
-    	Point O = _center; // נקודת מרכז הכדור
-    	Vector V = ray.getDir(); // וקטור הכיוון של הקרן
-
-       // נקודת המוצא של הקרן היא במרכז הכדור=נק' חיתוך אחת
+        // if p0 on center, calculate with line parametric representation
+        // the direction vector normalized.
         if (O.equals(p0)) {
-            Point newPoint = p0.add(ray.getDir().scale(_radius));
-            return List.of(newPoint);
+            Point newPoint = p0.add(ray.getDir().scale(this._radius));
+            return List.of(new GeoPoint(this,newPoint));
         }
-        //חישוב המרחק הקטן ביותר בין הקרן למרכז הכדור (d) ומשווה אותו לרדיוס הכדור.
+
         Vector U = O.subtract(p0);
         double tm = V.dotProduct(U);
         double d = Math.sqrt(U.lengthSquared() - tm * tm);
-        //אם המרחק גדול מהרדיוס=>הקרן לא חותכת
-        if (d >= _radius) {
+        if (d >= this._radius) {
             return null;
         }
 
-        double th = Math.sqrt(_radius * _radius - d * d); // מחושב המרחק בין הנקודות שבהן הקרן חוצה את הכדור
-        double t1 = tm - th; // המרחק מנקודת המוצא לנקודת החיתוך הראשונה
-        double t2 = tm + th; // המרחק מנקודת המוצא לנקודת החיתוך השנייה
+        double th = Math.sqrt(this._radius * this._radius - d * d);
+        double t1 = tm - th;
+        double t2 = tm + th;
 
-        List<Point> intersections = new ArrayList<>();
-//אם שניהם חויוביות יש לי שני נקודות חיתוך
         if (t1 > 0 && t2 > 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
-            intersections.add(p1);
-            intersections.add(p2);
-            // מיון הנקודות לפי המרחק מנקודת המוצא של הקרן
-            intersections.sort(Comparator.comparingDouble(p -> p.distance(p0)));
-            return intersections;
+            return List.of(new GeoPoint(this,p1),new GeoPoint(this,p2));
         }
-//אחד חיובי=נק' חיתוך אחת חיובית
+
         if (t1 > 0) {
             Point p1 = ray.getPoint(t1);
-            return List.of(p1);
+            return List.of(new GeoPoint(this,p1));
         }
 
         if (t2 > 0) {
             Point p2 = ray.getPoint(t2);
-            return List.of(p2);
+            return List.of(new GeoPoint(this,p2));
         }
-        //אף אחד לא חיובי=אין נק' חיתוך
         return null;
     }
 }

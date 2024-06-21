@@ -61,7 +61,10 @@ public class Camera {
      * @param distance - the distance between the camera and view plane
      * @return The camera distance
      */
-  
+    public Camera setVPDistance(double distance) {
+        this.distance = distance;
+        return this;
+    }
 
 
     /**
@@ -116,11 +119,7 @@ public class Camera {
         this.rayTracer = rayTracer;
         return this;
     }
-    
-    public Camera setVPDistance(double distance) {
-        this.distance = distance;
-        return this;
-    }
+
     public void renderImage() {
         if (this.imageWriter == null)
             throw new UnsupportedOperationException("Missing imageWriter");
@@ -146,7 +145,7 @@ public class Camera {
             }
         }
     }
-    
+
     public void writeToImage() {
         this.imageWriter.writeToImage();
     }
@@ -169,7 +168,6 @@ public class Camera {
         private double height;
         private ImageWriter imageWriter;
         private RayTracerBase rayTracer;
-        private Camera cam;
 
         public Builder setLocation(Point location) {
             this.location = location;
@@ -182,15 +180,10 @@ public class Camera {
             return this;
         }
 
-        
+
         public Builder setVpDistance(double distance) {
             this.distance = distance;
             return this;
-        }
-        
-        public Camera setVPDistance(double distance) {
-            this.cam.distance = distance;
-            return this.cam;
         }
 
         public Builder setVpSize(double width, double height) {
@@ -208,6 +201,12 @@ public class Camera {
             this.rayTracer = rayTracer;
             return this;
         }
+        public void writeToImage() {
+            if (this.imageWriter == null)
+                throw new UnsupportedOperationException("Missing imageWriter");
+
+            this.imageWriter.writeToImage();
+        }
 
         public Camera build() {
             Camera camera = new Camera(location, vTo, vUp);
@@ -218,8 +217,9 @@ public class Camera {
             return camera;
         }
     }
-
+    
     public static Builder getBuilder() {
         return new Builder();
     }
 }
+

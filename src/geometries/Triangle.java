@@ -4,11 +4,11 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-
+import static primitives.Util.isZero;
 import java.util.List;
 import static primitives.Util.alignZero;
 
-public class Triangle extends Polygon implements Geometry{
+public class Triangle extends Polygon {
 
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1,p2,p3);
@@ -21,36 +21,34 @@ public class Triangle extends Polygon implements Geometry{
                 '}';
     }
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
-        //בדיקה אם ווקטור הכיוןן של הקרן עם המכפלה הסקלירית של הנורמל...במידה ושניהם בעלי אותו סימן 
-    	//אז הם חוצים את המשולש 
-//
         //Check if the ray intersect the plane.
-        if (_plane.findIntersections(ray) == null) {
-            return null;
-        }
-        // the three vectors from the same starting point
-        Vector v1 = vertices.get(0).subtract(ray.getP0());
-        Vector v2 = vertices.get(1).subtract(ray.getP0());
-        Vector v3 = vertices.get(2).subtract(ray.getP0());
+        List<GeoPoint> intersections = _plane.findGeoIntersections(ray);
+        if (intersections == null) return null;
 
-        // עושים מכפלה ווקטורית כדי לקבל נורמל על כל "פאה" של הפרמידה שנוצרה לי ומנרמלים
-        //we want to get a normal for each pyramid's face so we do the crossProduct
-        Vector n1 = v1.crossProduct(v2).normalize();
-        Vector n2 = v2.crossProduct(v3).normalize();
-        Vector n3 = v3.crossProduct(v1).normalize();
-
-        // the ray's direction vector  - it has the same starting point as the three vectors from above
+        Point p0 = ray.getP0();
         Vector v = ray.getDir();
 
-        // check if the vector's direction (from Subtraction between the ray's vector to each vector from above) are equal
-        // if not - there is no intersection point between the ray and the triangle
-        if ((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) ||
-                (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)){
+        Vector v1 = vertices.get(0).subtract(p0);
+        Vector v2 = vertices.get(1).subtract(p0);
+        Vector v3 = vertices.get(2).subtract(p0);
 
-            return _plane.findIntersections(ray);
-        }
-        return null;
+        //Check every side of the triangle
+        double s1 = v.dotProduct(v1.crossProduct(v2));
+
+        if (isZero(s1)) return null;
+
+        double s2 = v.dotProduct(v2.crossProduct(v3));
+
+        if (isZero(s2)) return null;
+
+        double s3 = v.dotProduct(v3.crossProduct(v1));
+
+        if (isZero(s3)) return null;
+
+        if (!((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0))) return null;
+
+        return List.of(new GeoPoint(this,intersections.get(0).point));
     }
 }

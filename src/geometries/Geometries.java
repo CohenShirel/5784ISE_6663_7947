@@ -1,7 +1,5 @@
 package geometries;
 
-
-
 import primitives.Point;
 import primitives.Ray;
 
@@ -12,7 +10,7 @@ import java.util.List;
 /**
  * Composite class for all geometries object implementing {@link Intersectable}
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
     List<Intersectable> _intersectables;
 
     public Geometries() {
@@ -29,18 +27,23 @@ public class Geometries implements Intersectable {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        LinkedList<Point> points=null; // החזקת נקודות חיתוך עם כל אחתד מהגאומטרים
-        for(var geometry: _intersectables){
-            var geometryList=geometry.findIntersections(ray);
-            if(geometryList!=null){
-                if(points==null){
-                    points=new LinkedList<>();
+    //=== find intersection point between a geometry (we know now) and the ray ===//
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+
+        List<GeoPoint> intersection = null;
+
+        for (Intersectable geometry : this._intersectables) { // loop on all the geometry that implement "the Intersectables"
+            // list of crossing point between the ray ana the geometry//
+            var geoIntersections = geometry.findGeoIntersections(ray);
+            if (geoIntersections != null) { // if there is a crossing
+                if (intersection == null) {
+                    intersection = new LinkedList<>();
                 }
-                points.addAll(geometryList);
+                intersection.addAll(geoIntersections);
             }
         }
-        return points;
+
+        return intersection;
     }
 }
 
