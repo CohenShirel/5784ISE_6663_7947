@@ -1,6 +1,7 @@
 package scene;
 
 import geometries.Geometries;
+import geometries.Intersectable;
 import lighting.AmbientLight;
 import lighting.LightSource;
 import primitives.Color;
@@ -8,10 +9,9 @@ import primitives.Color;
 import java.util.LinkedList;
 import java.util.List;
 
-//================== Scene class (PDS - Plain Data Structure) ==================//
 public class Scene {
 
-    List<LightSource> lights = new LinkedList<LightSource>();
+    private List<LightSource> lights = new LinkedList<LightSource>();
 
     public Scene setLights(List<LightSource> lights) {
         this.lights = lights;
@@ -22,23 +22,16 @@ public class Scene {
         return this.lights;
     }
 
-    //==== we use with design pattern called "builder pattern" ====//
+    private final String name;
+    private Color background; 
+    private AmbientLight ambientLight; 
+    private final Geometries geometries;
 
-    private final String name; // the scene's name
-    private final Color background; // the background's color (black is the default)
-    private final AmbientLight ambientLight; //the ambientLight - תאורה סביבתית
-    private final Geometries geometries; // the 3D model
-
-    /**
-     * Constructs a new Scene object with the specified name.
-     *
-     * @param name The name of the scene.
-     */
     public Scene(String name) {
         this.name = name;
-        this.background = Color.BLACK; // Default background color is black
-        this.ambientLight = new AmbientLight(); // Default ambient light
-        this.geometries = new Geometries(); // Initialize empty geometries collection
+        this.background = Color.BLACK; 
+        this.ambientLight = new AmbientLight(); 
+        this.geometries = new Geometries(); 
     }
 
     public String getName() {
@@ -54,8 +47,21 @@ public class Scene {
     }
 
     public Geometries getGeometries() {
-        if (geometries == null) return new Geometries();
         return geometries;
+    }
+
+    public Scene setBackground(Color background) {
+        this.background = background;
+        return this;
+    }
+
+    public Scene setAmbientLight(AmbientLight ambientLight) {
+        this.ambientLight = ambientLight;
+        return this;
+    }
+    public Scene addGeometries(Intersectable... geometries) {
+        this.geometries.add(geometries);
+        return this;
     }
 
     private Scene(SceneBuilder builder) {
@@ -64,28 +70,16 @@ public class Scene {
         this.ambientLight = builder.ambientLight;
         this.geometries = builder.geometries;
     }
-    /**
-     * Sets the ambient light of the scene.
-     *
-     * @param ambientLight The ambient light to set.
-     * @return This Scene object to allow for chaining of method calls.
-     */
-    public Scene setAmbientLight(AmbientLight ambientLight) {
-        ambientLight = ambientLight;
-        return this;
-    }
-    //================== SceneBuilder class ==================//
+
     public static class SceneBuilder {
-        private final String name; // the scene's name
-        private Color background = Color.BLACK; // the background's color (black is the default)
-        private AmbientLight ambientLight = new AmbientLight(); //the ambientLight
-        private Geometries geometries = new Geometries(); // the 3D model
+        private final String name;
+        private Color background = Color.BLACK; 
+        private AmbientLight ambientLight = new AmbientLight(); 
+        private Geometries geometries = new Geometries(); 
 
         public SceneBuilder(String name) {
             this.name = name;
         }
-
-        //========= chaining (שירשור) method =========//
 
         public SceneBuilder setBackground(Color background) {
             this.background = background;

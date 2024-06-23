@@ -19,4 +19,9 @@ public interface LightSource {
      * @return the direction
      */
     public Vector getL(Point p);
+    
+    default LightSource setSharpness(double sharpness) {
+        return this;
+    }
+    
 }

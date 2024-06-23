@@ -7,33 +7,22 @@ import primitives.Vector;
 
 import static primitives.Util.isZero;
 
-/**
- * Class to implement Camera to render the picture
- */
 public class Camera {
 
-    private Point p0; // the center's camera point
-    private Vector vTo; // the vector towards the view plane
-    private Vector vUp; // vector to camera's up direction
-    private Vector vRight; // vector to camera's right direction
-    private double distance; // the distance between the camera and the view plane
+    private Point p0;
+    private Vector vTo;
+    private Vector vUp;
+    private Vector vRight;
+    private double distance;
 
-    //=== the view plane size ===//
     private double width;
     private double height;
 
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
-    //===== constructor to initialize camera =======//
-     /**
-     * @param p0  - camera's location
-     * @param vTo - camera's towards direction
-     * @param vUp - camera's up direction
-     */
     public Camera(Point p0, Vector vTo, Vector vUp) {
-        //The vectors vTo and vUp must be orthogonal - the camera's struct//
-        if(!isZero(vTo.dotProduct(vUp))){
+        if (!isZero(vTo.dotProduct(vUp))) {
             throw new IllegalArgumentException("vTo and vUp are not orthogonal");
         }
 
@@ -45,66 +34,40 @@ public class Camera {
 
     public Point getP0() { return this.p0; }
 
-    public Vector getvT0() { return this.vTo;}
+    public Vector getvT0() { return this.vTo; }
 
-    public Vector getvUp() { return this.vUp;}
+    public Vector getvUp() { return this.vUp; }
 
     public Vector getvRight() { return this.vRight; }
 
-    public double getWidth() { return this.width;}
+    public double getWidth() { return this.width; }
 
-    public double getHeight() {return this.height;}
+    public double getHeight() { return this.height; }
 
-    //Chaining methods.
-    /**
-     * Set view plane distance
-     * @param distance - the distance between the camera and view plane
-     * @return The camera distance
-     */
     public Camera setVPDistance(double distance) {
         this.distance = distance;
         return this;
     }
 
-
-    /**
-     * Set view plane size
-     * @param width width of the view plane
-     * @param height height of the view plane
-     * @return The view plane size
-     */
     public Camera setVPSize(double width, double height) {
         this.width = width;
         this.height = height;
         return this;
     }
 
-    /**
-     * Constructs a ray from Camera location throw the center of a
-     * pixel (i,j) in the view plane .
-     *
-     * @param Nx number of pixels in a row of view plane
-     * @param Ny number of pixels in a column of view plane
-     * @param j  number of the pixel in a row
-     * @param i  number of the pixel in a column
-     * @return The ray through pixel's center
-     */
     public Ray constructRay(int Nx, int Ny, int j, int i) {
-        // Ratio (pixel width & height) - for find the center of single pixel where the ray cross //
-        double Ry= (double) this.height / Ny;
+        double Ry = (double) this.height / Ny;
         double Rx = (double) this.width / Nx;
 
-        //=== image (pixel[i,j]) center === //
         Point Pc = this.p0.add(this.vTo.scale(this.distance));
         Point Pij = Pc;
         double Yi = -(i - ((Ny - 1) / 2d)) * Ry;
         double Xj = (j - ((Nx - 1) / 2d)) * Rx;
 
-        //move to middle of pixel [i,j]
-        if (!isZero(Xj)) { // vRight need to be scaled with xj, so it cannot be zero
+        if (!isZero(Xj)) {
             Pij = Pij.add(this.vRight.scale(Xj));
         }
-        if (!isZero(Yi)) {// vUp need to be scaled with yi, so it cannot be zero
+        if (!isZero(Yi)) {
             Pij = Pij.add(this.vUp.scale(Yi));
         }
         return new Ray(this.p0, Pij.subtract(this.p0));
@@ -120,37 +83,38 @@ public class Camera {
         return this;
     }
 
-    public void renderImage() {
+    public Camera renderImage() {
         if (this.imageWriter == null)
             throw new UnsupportedOperationException("Missing imageWriter");
         if (this.rayTracer == null)
             throw new UnsupportedOperationException("Missing rayTracerBase");
 
         for (int i = 0; i < this.imageWriter.getNy(); i++) {
-            for (int j = 0; j < this.imageWriter.getNy(); j++) {
-                Color color = castRay(j,i);
+            for (int j = 0; j < this.imageWriter.getNx(); j++) {
+                Color color = castRay(j, i);
                 this.imageWriter.writePixel(j, i, color);
             }
         }
+        return this;
     }
 
-    public void printGrid(int interval, Color color) {
-        //=== running on the view plane===//
+    public Camera printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++) {
-                //=== create the net ===//
                 if (i % interval == 0 || j % interval == 0) {
                     imageWriter.writePixel(i, j, color);
                 }
             }
         }
+        return this;
     }
 
-    public void writeToImage() {
+    public Camera writeToImage() {
         this.imageWriter.writeToImage();
+        return this;
     }
 
-    private Color castRay(int j, int i){
+    private Color castRay(int j, int i) {
         Ray ray = constructRay(
                 this.imageWriter.getNx(),
                 this.imageWriter.getNy(),
@@ -174,12 +138,11 @@ public class Camera {
             return this;
         }
 
-        public Builder setDirection(Vector vTo, Vector vUp) {
-            this.vTo = vTo;
+        public Builder setDirection(Point location, Vector vUp) {
+            this.location = location;
             this.vUp = vUp;
             return this;
         }
-
 
         public Builder setVpDistance(double distance) {
             this.distance = distance;
@@ -201,12 +164,6 @@ public class Camera {
             this.rayTracer = rayTracer;
             return this;
         }
-        public void writeToImage() {
-            if (this.imageWriter == null)
-                throw new UnsupportedOperationException("Missing imageWriter");
-
-            this.imageWriter.writeToImage();
-        }
 
         public Camera build() {
             Camera camera = new Camera(location, vTo, vUp);
@@ -217,7 +174,7 @@ public class Camera {
             return camera;
         }
     }
-    
+
     public static Builder getBuilder() {
         return new Builder();
     }

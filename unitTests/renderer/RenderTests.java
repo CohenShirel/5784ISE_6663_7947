@@ -57,7 +57,7 @@ public class RenderTests {
     */
    @Test
    public void renderMultiColorTest() {
-      scene.geometries.add( // center
+      scene.getGeometries().add( // center
                            new Sphere(new Point(0, 0, -100), 50),
                            // up left
                            new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))

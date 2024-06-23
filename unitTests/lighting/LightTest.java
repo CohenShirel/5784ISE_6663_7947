@@ -19,7 +19,7 @@ import renderer.ImageWriter;
 import renderer.SimpleRayTrancer;
 import scene.Scene;
 
-public class LightsTests {
+public class LightTest {
     private final Scene scene1 = new Scene("Test scene");
     private final Scene scene2 = new Scene("Test scene")
             .setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
@@ -151,4 +151,3 @@ public class LightsTests {
                 .writeToImage();
     }
 }
-

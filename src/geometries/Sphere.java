@@ -1,6 +1,7 @@
 package geometries;
-import java.util.ArrayList;
-import java.util.Comparator;
+
+import primitives.Color;
+import primitives.Material;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -8,9 +9,11 @@ import primitives.Vector;
 import java.util.List;
 import java.util.Objects;
 
-public class Sphere extends Geometry{
+public class Sphere extends Geometry {
     private final Point _center;
     private final double _radius;
+    private Color _emission = Color.BLACK;
+    private Material _material = new Material();
 
     public Sphere(Point center, double radius) {
         _center = center;
@@ -25,11 +28,33 @@ public class Sphere extends Geometry{
         return _radius;
     }
 
+    public Sphere setEmission(Color emission) {
+        _emission = emission;
+        return this;
+    }
+
+    public Sphere setMaterial(Material material) {
+        _material = material;
+        return this;
+    }
+
+    @Override
+    public Color getEmission() {
+        return _emission;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return _material;
+    }
+
     @Override
     public String toString() {
         return "Sphere{" +
                 "_center=" + _center +
                 ", _radius=" + _radius +
+                ", _emission=" + _emission +
+                ", _material=" + _material +
                 '}';
     }
 
@@ -46,11 +71,6 @@ public class Sphere extends Geometry{
         return Objects.hash(_center, _radius);
     }
 
-    /**
-     * Return the normal to the sphere in the receiving point
-     * @param point Point on the sphere
-     * @return Normal to the sphere in the receiving point (Vector)
-     */
     @Override
     public Vector getNormal(Point point) {
         Vector v = point.subtract(_center);
@@ -67,7 +87,7 @@ public class Sphere extends Geometry{
         // the direction vector normalized.
         if (O.equals(p0)) {
             Point newPoint = p0.add(ray.getDir().scale(this._radius));
-            return List.of(new GeoPoint(this,newPoint));
+            return List.of(new GeoPoint(this, newPoint));
         }
 
         Vector U = O.subtract(p0);
@@ -84,18 +104,19 @@ public class Sphere extends Geometry{
         if (t1 > 0 && t2 > 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
-            return List.of(new GeoPoint(this,p1),new GeoPoint(this,p2));
+            return List.of(new GeoPoint(this, p1), new GeoPoint(this, p2));
         }
 
         if (t1 > 0) {
             Point p1 = ray.getPoint(t1);
-            return List.of(new GeoPoint(this,p1));
+            return List.of(new GeoPoint(this, p1));
         }
 
         if (t2 > 0) {
             Point p2 = ray.getPoint(t2);
-            return List.of(new GeoPoint(this,p2));
+            return List.of(new GeoPoint(this, p2));
         }
         return null;
     }
 }
+

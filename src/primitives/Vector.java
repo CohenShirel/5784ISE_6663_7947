@@ -104,4 +104,6 @@ public class Vector extends Point {
  public String toString() {
      return "Vector" + _xyz;
  }
+ // Adding a constant for the unit vector in the Y direction
+ public static final Vector Y = new Vector(0, 1, 0);
 }

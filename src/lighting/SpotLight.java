@@ -6,18 +6,19 @@ import primitives.*;
 
 public class SpotLight extends PointLight {
 
-    private Vector dir;
-
-    /**
-     * constructor for the intensity
-     *
-     * @param color     of the intensity of the source of the light
-     * @param direction
-     */
-    protected SpotLight(Color color, Point position, Vector direction) {
-        super(color, position);
-        this.dir = direction.normalize();
-    }
+	 private Vector dir;
+	 private double sharpness;
+	 /**
+	     * constructor for the intensity
+	     *
+	     * @param color     of the intensity of the source of the light
+	     * @param direction
+	     */
+	 protected SpotLight(Color color, Point position, Vector direction) {
+	        super(color, position);
+	        this.dir = direction.normalize();
+	        this.sharpness = 1.0; // ערך ברירת מחדל לחדות
+	    }
 
     @Override
     public Color getIntensity(Point point) {
@@ -31,5 +32,10 @@ public class SpotLight extends PointLight {
         Color pointLightIntensity = super.getIntensity(point);
 
         return (pointLightIntensity.scale(factor));
+    }
+
+    public SpotLight setSharpness(double sharpness) {
+        this.sharpness = sharpness;
+        return this;
     }
 }
