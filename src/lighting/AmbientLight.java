@@ -4,37 +4,32 @@ import primitives.Color;
 import primitives.Double3;
 
 /**
- * Ambient Light for all object in 3D space
- *
- * this class represented us the Ambient Light (תאורה סביבתית)
+ * The AmbientLight class represents ambient light in a scene.
+ * Ambient light is the overall light that is present everywhere
+ * in a scene, illuminating all objects equally.
  */
-public class AmbientLight {
+public class AmbientLight extends Light {
 
-    private final Color intensity; // intensity (עצמה) of ambient Light
+    /** A predefined AmbientLight object representing no ambient light. */
+    public static final AmbientLight NONE = new AmbientLight(Color.BLACK, 0);
 
     /**
-     * constructor for knowing the intensity after the light factor
+     * Constructs an AmbientLight object with the specified intensity and coefficient.
      *
-     * @param Ia - Light illumination (RGB עצמת האור לפי קומפוננטות)
-     * @param Ka - Light factor - מקדם הנחתה של האור
+     * @param Ia the intensity of the ambient light
+     * @param Ka the coefficient of the ambient light
      */
     public AmbientLight(Color Ia, Double3 Ka) {
-        //calculation of the intensity after the light factor//
-        this.intensity = Ia.scale(Ka);
+        super(Ia.scale(Ka));
     }
 
     /**
-     * default constructor for initialize the background to black
+     * Constructs an AmbientLight object with the specified intensity and coefficient.
+     *
+     * @param Ia the intensity of the ambient light
+     * @param Ka the coefficient of the ambient light
      */
-    public AmbientLight() {
-        this.intensity = Color.BLACK;
-    }
-
-    /**
-     * getter for intensity
-     * @return the intensity
-     */
-    public Color getIntensity() {
-        return this.intensity;
+    public AmbientLight(Color Ia, double Ka) {
+        super(Ia.scale(Ka));
     }
 }

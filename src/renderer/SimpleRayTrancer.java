@@ -19,10 +19,10 @@ public class SimpleRayTrancer extends RayTracerBase {
      */
     @Override
     public Color traceRay(Ray ray) {
-        List<Point> intersections = this.scene.getGeometries().findIntersections(ray);
+        List<Point> intersections = this.scene.geometries.findIntersections(ray);
 
         if (intersections == null)
-            return this.scene.getBackground();
+            return this.scene.background;
 
         Point closestPoint = ray.findClosestPoint(intersections);
 
@@ -35,7 +35,7 @@ public class SimpleRayTrancer extends RayTracerBase {
      * @return Color of the intersection point
      */
     private Color calcColor(Point point) {
-        return this.scene.getAmbientLight().getIntensity();
+        return this.scene.ambientLight.getIntensity();
     }
 }
 

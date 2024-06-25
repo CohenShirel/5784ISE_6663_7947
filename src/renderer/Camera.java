@@ -4,7 +4,7 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 public class Camera {
@@ -14,13 +14,19 @@ public class Camera {
     private Vector vUp;
     private Vector vRight;
     private double distance;
-
     private double width;
     private double height;
 
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
+    /**
+     * Default constructor for the Camera class.
+     * This is a private constructor to prevent direct instantiation.
+     */
+    private Camera() {
+    }
+    
     public Camera(Point p0, Vector vTo, Vector vUp) {
         if (!isZero(vTo.dotProduct(vUp))) {
             throw new IllegalArgumentException("vTo and vUp are not orthogonal");
@@ -31,7 +37,15 @@ public class Camera {
         this.vUp = vUp.normalize();
         this.vRight = vTo.crossProduct(vUp);
     }
-
+    /**
+     * Creates a new Builder for constructing Camera instances.
+     *
+     * @return a new Builder instance
+     */
+    public static Builder getBuilder() {
+        return new Builder();
+    } 
+    
     public Point getP0() { return this.p0; }
 
     public Vector getvT0() { return this.vTo; }
@@ -124,59 +138,124 @@ public class Camera {
     }
 
     public static class Builder {
-        private Point location;
-        private Vector vTo;
-        private Vector vUp;
-        private double distance;
-        private double width;
-        private double height;
-        private ImageWriter imageWriter;
-        private RayTracerBase rayTracer;
+    	 private final Camera camera = new Camera();
+    	 /**
+          * Sets the location of the camera.
+          *
+          * @param location the location of the camera
+          * @return this Builder instance
+          */
+         public Builder setLocation(Point location) {
+             camera.p0 = location;
+             return this;
+         }
 
-        public Builder setLocation(Point location) {
-            this.location = location;
-            return this;
-        }
+         /**
+          * Sets the direction of the camera.
+          *
+          * @param toVector the vector pointing forward
+          * @param upVector the vector pointing upwards
+          * @return this Builder instance
+          * @throws IllegalArgumentException if the vectors are not perpendicular or not normalized
+          */
+         public Builder setDirection(Vector toVector, Vector upVector) {
+             if (toVector.dotProduct(upVector) != 0) {
+                 throw new IllegalArgumentException("The vectors must be orthogonal");
+             }
+             camera.vTo = toVector.normalize();
+             camera.vUp = upVector.normalize();
+             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+             return this;
+         }
 
-        public Builder setDirection(Point location, Vector vUp) {
-            this.location = location;
-            this.vUp = vUp;
-            return this;
-        }
+         /**
+          * Sets the size of the view plane.
+          *
+          * @param width  the width of the view plane
+          * @param height the height of the view plane
+          * @return this Builder instance
+          * @throws IllegalArgumentException if width or height is not positive
+          */
+         public Builder setVpSize(double width, double height) {
+             camera.width = width;
+             camera.height = height;
+             return this;
+         }
 
-        public Builder setVpDistance(double distance) {
-            this.distance = distance;
-            return this;
-        }
+         /**
+          * Sets the distance between the camera and the view plane.
+          *
+          * @param distance the distance between the camera and the view plane
+          * @return this Builder instance
+          * @throws IllegalArgumentException if the distance is not positive
+          */
+         public Builder setVpDistance(double distance) {
+             if (distance <= 0) {
+                 throw new IllegalArgumentException("Distance must be a positive value.");
+             }
+             camera.distance = distance;
+             return this;
+         }
 
-        public Builder setVpSize(double width, double height) {
-            this.width = width;
-            this.height = height;
-            return this;
-        }
+         /**
+          * Sets the ImageWriter for the camera.
+          *
+          * @param imageWriter the ImageWriter to set
+          * @return this Builder instance
+          */
+         public Builder setImageWriter(ImageWriter imageWriter) {
+             camera.imageWriter = imageWriter;
+             return this;
+         }
 
-        public Builder setImageWriter(ImageWriter imageWriter) {
-            this.imageWriter = imageWriter;
-            return this;
-        }
-
-        public Builder setRayTracer(RayTracerBase rayTracer) {
-            this.rayTracer = rayTracer;
-            return this;
-        }
-
+         /**
+          * Sets the RayTracer for the camera.
+          *
+          * @param rayTracer the RayTracer to set
+          * @return this Builder instance
+          */
+         public Builder setRayTracer(RayTracerBase rayTracer) {
+             camera.rayTracer = rayTracer;
+             return this;
+         }
+         
         public Camera build() {
-            Camera camera = new Camera(location, vTo, vUp);
-            camera.setVPDistance(distance);
-            camera.setVPSize(width, height);
-            camera.setImageWriter(imageWriter);
-            camera.setRayTracer(rayTracer);
-            return camera;
+            if (camera.p0 == null) {
+                throw new IllegalStateException("Missing rendering data: location (p0)");
+            }
+            if (camera.vUp == null) {
+                throw new IllegalStateException("Missing rendering data: vUp");
+            }
+            if (camera.vTo == null) {
+                throw new IllegalStateException("Missing rendering data: vTo");
+            }
+            if (camera.imageWriter == null) {
+                throw new IllegalStateException("Missing rendering data: imageWriter");
+            }
+            if (camera.rayTracer == null) {
+                throw new IllegalStateException("Missing rendering data: rayTracer");
+            }
+            if (alignZero(camera.width) == 0) {
+                throw new IllegalStateException("Missing rendering data: width");
+            }
+            if (alignZero(camera.height) == 0) {
+                throw new IllegalStateException("Missing rendering data: height");
+            }
+            if (alignZero(camera.distance) == 0) {
+                throw new IllegalStateException("Missing rendering data: distance");
+            }
+
+            camera.vUp = camera.vUp.normalize();
+            camera.vTo = camera.vTo.normalize();
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            try {
+                return (Camera) camera.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
-    }
+  
 }
 

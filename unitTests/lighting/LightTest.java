@@ -71,8 +71,8 @@ public class LightTest {
 
     @Test
     public void sphereDirectional() {
-        scene1.getGeometries().add(sphere);
-        scene1.getLights().add(new DirectionalLight(sphereLightColor, sphereLightDirection));
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new DirectionalLight(sphereLightColor, sphereLightDirection));
 
         camera1.setImageWriter(new ImageWriter("lightSphereDirectional", 500, 500))
                 .build()
@@ -82,9 +82,9 @@ public class LightTest {
 
     @Test
     public void spherePoint() {
-        scene1.getGeometries().add(sphere);
-        scene1.getLights().add(new PointLight(sphereLightColor, sphereLightPosition)
-                .setkL(0.001).setkQ(0.0002));
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new PointLight(sphereLightColor, sphereLightPosition)
+                .setKl(0.001).setKq(0.0002));
 
         camera1.setImageWriter(new ImageWriter("lightSpherePoint", 500, 500))
                 .build()
@@ -94,9 +94,9 @@ public class LightTest {
 
     @Test
     public void sphereSpot() {
-        scene1.getGeometries().add(sphere);
-        scene1.getLights().add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
-                .setkL(0.001).setkQ(0.0001));
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
+                .setKl(0.001).setKq(0.0001));
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpot", 500, 500))
                 .build()
@@ -106,8 +106,8 @@ public class LightTest {
 
     @Test
     public void trianglesDirectional() {
-        scene2.getGeometries().add(triangle1, triangle2);
-        scene2.getLights().add(new DirectionalLight(trianglesLightColor, trianglesLightDirection));
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new DirectionalLight(trianglesLightColor, trianglesLightDirection));
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesDirectional", 500, 500))
                 .build()
@@ -117,9 +117,9 @@ public class LightTest {
 
     @Test
     public void trianglesPoint() {
-        scene2.getGeometries().add(triangle1, triangle2);
-        scene2.getLights().add(new PointLight(trianglesLightColor, trianglesLightPosition)
-                .setkL(0.001).setkQ(0.0002));
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new PointLight(trianglesLightColor, trianglesLightPosition)
+                .setKl(0.001).setKq(0.0002));
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesPoint", 500, 500))
                 .build()
@@ -129,9 +129,9 @@ public class LightTest {
 
     @Test
     public void trianglesSpot() {
-        scene2.getGeometries().add(triangle1, triangle2);
-        scene2.getLights().add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
-                .setkL(0.001).setkQ(0.0001));
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
+                .setKl(0.001).setKq(0.0001));
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpot", 500, 500))
                 .build()
@@ -141,9 +141,9 @@ public class LightTest {
 
     @Test
     public void sphereSpotSharp() {
-        scene1.getGeometries().add(sphere);
-        scene1.getLights().add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
-                .setkL(0.001).setkQ(0.0001).setSharpness(10));
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
+                .setKl(0.001).setKq(0.0001).setSharpness(10));
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
                 .build()
