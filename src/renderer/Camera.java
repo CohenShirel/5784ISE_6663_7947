@@ -7,7 +7,7 @@ import primitives.Vector;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
-public class Camera {
+public class Camera implements Cloneable {
 
     private Point p0;
     private Vector vTo;
