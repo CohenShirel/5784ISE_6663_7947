@@ -52,7 +52,7 @@ public class Material {
      * @param kS light factor (double)
      * @return
      */
-    public Material setkS(Double kS) {
+    public Material setkS(double kS) {
         this.kS = new Double3(kS);
         return this;
     }

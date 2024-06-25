@@ -70,7 +70,7 @@ public class Double3 {
      * @param rhs right handle side operand for addition
      * @return result of add
      */
-    Double3 add(Double3 rhs) {
+    public Double3 add(Double3 rhs) {
         return new Double3(_d1 + rhs._d1, _d2 + rhs._d2, _d3 + rhs._d3);
     }
 
@@ -92,7 +92,7 @@ public class Double3 {
      * @param rhs right handle side operand for scaling
      * @return result of scale
      */
-    Double3 scale(double rhs) {
+    public Double3 scale(double rhs) {
         return new Double3(_d1 * rhs, _d2 * rhs, _d3 * rhs);
     }
 
@@ -103,7 +103,7 @@ public class Double3 {
      * @param rhs right handle side operand for reducing
      * @return result of scale
      */
-    Double3 reduce(double rhs) {
+    public Double3 reduce(double rhs) {
         return new Double3(_d1 / rhs, _d2 / rhs, _d3 / rhs);
     }
 
@@ -114,7 +114,7 @@ public class Double3 {
      * @param rhs right handle side operand for product
      * @return result of product
      */
-    Double3 product(Double3 rhs) {
+    public Double3 product(Double3 rhs) {
         return new Double3(_d1 * rhs._d1, _d2 * rhs._d2, _d3 * rhs._d3);
     }
 }
