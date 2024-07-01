@@ -30,7 +30,7 @@ public abstract class Intersectable {
     //======== the NVI design pattern =======//
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
+    public final List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
     }
 
