@@ -56,7 +56,7 @@ public class Ray {
      * @param t is a distance for reaching new Point
      * @return new {@link Point}
      */
-    
+   
     public Point getPoint(double t) {
         if (isZero(t)) {
             throw new IllegalArgumentException("t is equal to 0 produce an illegal ZERO vector");
