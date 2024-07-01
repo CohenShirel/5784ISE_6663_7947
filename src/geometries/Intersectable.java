@@ -5,6 +5,7 @@ import primitives.*;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * an abstract class for finding the intersection point between the ray and the complex object
  *
