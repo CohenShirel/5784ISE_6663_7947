@@ -25,7 +25,6 @@ public class SimpleRayTrancer extends RayTracerBase {
         return scene.ambientLight.getIntensity().add(geoPoint.geometry.getEmission())
                 .add(calcLocalEffects(geoPoint, ray));
     }
-
     /**
      * Get color of the intersection of the ray with the scene
      * @param ray Ray to trace
