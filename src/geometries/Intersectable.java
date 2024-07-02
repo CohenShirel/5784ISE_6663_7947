@@ -27,7 +27,6 @@ public abstract class Intersectable {
                 : geoList.stream().map(gp -> gp.point).toList();
     }
 
-
     //======== the NVI design pattern =======//
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
