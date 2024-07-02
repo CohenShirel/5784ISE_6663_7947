@@ -1,7 +1,6 @@
 package primitives;
 
 
-import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 
 import java.util.List;

@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public abstract class Geometry extends Intersectable {
 
-    private Color emission = Color.BLACK; // the geometry's default color
+	protected Color emission = Color.BLACK; // the geometry's default color
     private Material material = new Material(); // the material the geometry has made of
 
     /**
@@ -27,7 +27,7 @@ public abstract class Geometry extends Intersectable {
      * @return the geometry's color
      */
     public Color getEmission() {
-        return this.emission;
+        return emission;
     }
 
     /**

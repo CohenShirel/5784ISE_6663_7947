@@ -31,15 +31,21 @@ public class DirectionalLight extends Light implements LightSource {
     public Color getIntensity(Point p) {
         return this.intensity;
     }
-
+ 
     /**
      * Return normalize direction vector from the light source to the object
      *
      * @param p the point on the object (Point)
      * @return normalize direction vector from the light source to the object (Vector)
-     */
+     */ 
     @Override
     public Vector getL(Point p) {
         return this.direction.normalize();
     }
+    
+    
 }
+
+
+
+
