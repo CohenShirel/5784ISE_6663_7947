@@ -23,6 +23,11 @@ public interface LightSource {
     default LightSource setSharpness(double sharpness) {
         return this;
     }
-    
+    /**
+	 * Calculates the distance from the current point to the given point.
+	 *
+	 * @param  p  the point to calculate the distance to
+	 * @return    the distance from the current point to the given point
+	 */
+	double getDistance(Point p);
 }
-

@@ -10,21 +10,25 @@ import static primitives.Util.alignZero;
 import java.util.List;
 
 public class SimpleRayTrancer extends RayTracerBase {
+	
+    private static final double DELTA = 0.1;
+
+   
     public SimpleRayTrancer(Scene scene) {
         super(scene);
     }
 
     /**
-     * Calculates the color of a point in the scene.
+     * Calculate the color for a given point and ray.
      *
-     * @param geoPoint The point on the geometry in the scene.
-     * @param ray The ray from the camera to the intersection.
-     * @return The color of the point.
+     * @param  point  the geographic point
+     * @param  ray    the ray
+     * @return       the calculated color
      */
-    private Color calcColor(GeoPoint geoPoint, Ray ray) {
-        return scene.ambientLight.getIntensity().add(geoPoint.geometry.getEmission())
-                .add(calcLocalEffects(geoPoint, ray));
+    private Color calcColor(GeoPoint point, Ray ray) {
+        return calcLocalEffects(point, ray).add(super.scene.ambientLight.getIntensity());
     }
+
     /**
      * Get color of the intersection of the ray with the scene
      * @param ray Ray to trace
@@ -38,6 +42,19 @@ public class SimpleRayTrancer extends RayTracerBase {
 
         GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
         return calcColor(closestPoint, ray);
+    }
+
+    private boolean unshaded(GeoPoint gp , Vector l,LightSource lightSource,Vector n) {
+        Vector lightDirection = l.scale(-1);
+        Vector delta = n.scale(n.dotProduct(lightDirection) > 0 ? DELTA : -DELTA);
+        Point point = gp.point.add(delta);
+        Ray lightRay = new Ray(point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+        if (intersections != null)
+            for (GeoPoint geoPoint : intersections)
+                if (geoPoint.point.distance(gp.point) < lightSource.getDistance(gp.point))
+                    return false;
+        return true;
     }
 
     /**
@@ -107,4 +124,3 @@ public class SimpleRayTrancer extends RayTracerBase {
         return lightIntensity.scale(ks.scale(Math.pow(minusVR, nShininess)));
     }
 }
-
