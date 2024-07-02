@@ -16,6 +16,7 @@ import java.util.Objects;
  * We define here only the "findIntersection" function to find intersection points between the ray
  * and the complex object
  */
+
 public abstract class Intersectable {
     /*
      * @param ray {@link Ray} pointing toward the object
@@ -26,7 +27,6 @@ public abstract class Intersectable {
         return geoList == null ? null
                 : geoList.stream().map(gp -> gp.point).toList();
     }
-
 
     //======== the NVI design pattern =======//
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
