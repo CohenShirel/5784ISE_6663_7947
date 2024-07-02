@@ -18,16 +18,7 @@ public class SimpleRayTrancer extends RayTracerBase {
         super(scene);
     }
 
-    /**
-     * Calculate the color for a given point and ray.
-     *
-     * @param  point  the geographic point
-     * @param  ray    the ray
-     * @return       the calculated color
-     */
-    private Color calcColor(GeoPoint point, Ray ray) {
-        return calcLocalEffects(point, ray).add(super.scene.ambientLight.getIntensity());
-    }
+  
 
     /**
      * Get color of the intersection of the ray with the scene
@@ -36,12 +27,10 @@ public class SimpleRayTrancer extends RayTracerBase {
      */
     @Override
     public Color traceRay(Ray ray) {
-        List<GeoPoint> intersections = this.scene.geometries.findGeoIntersections(ray);
-        if (intersections == null)
-            return this.scene.background;
-
-        GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
-        return calcColor(closestPoint, ray);
+        List <GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        if(intersections == null)
+            return scene.background;
+        return calcColor(ray.findClosestGeoPoint(intersections),ray);
     }
 
     private boolean unshaded(GeoPoint gp , Vector l,LightSource lightSource,Vector n) {
@@ -56,71 +45,77 @@ public class SimpleRayTrancer extends RayTracerBase {
                     return false;
         return true;
     }
+    /**
+     * Calculate the color for a given point and ray.
+     *
+     * @param  point  the geographic point
+     * @param  ray    the ray
+     * @return       the calculated color
+     */
+    private Color calcColor(GeoPoint point, Ray ray) {
+        return calcLocalEffects(point, ray).add(super.scene.ambientLight.getIntensity());
+    }
 
     /**
-     * Calculates the effect of different light sources on a point in the scene
-     * according to the Phong model.
+     * Calculate local effects for a given GeoPoint and Ray.
      *
-     * @param intersection The point on the geometry in the scene.
-     * @param ray The ray from the camera to the intersection.
-     * @return The color of the point affected by local light sources.
+     * @param  geoPoint  the geometric point
+     * @param  ray       the ray
+     * @return           the color representing the local effects
      */
-    private Color calcLocalEffects(GeoPoint intersection, Ray ray) {
+    private Color calcLocalEffects(GeoPoint geoPoint, Ray ray) {
+        Color color = geoPoint.geometry.getEmission();
         Vector v = ray.getDir();
-        Vector n = intersection.geometry.getNormal(intersection.point);
+        Vector n = geoPoint.geometry.getNormal(geoPoint.point);
         double nv = alignZero(n.dotProduct(v));
         if (nv == 0)
-            return Color.BLACK;
-
-        int nShininess = intersection.geometry.getMaterial().nShininess;
-        Double3 kd = intersection.geometry.getMaterial().kD;
-        Double3 ks = intersection.geometry.getMaterial().kS;
-
-        Color color = Color.BLACK;
+            return color;
+        Material material = geoPoint.geometry.getMaterial();
         for (LightSource lightSource : scene.lights) {
-            Vector l = lightSource.getL(intersection.point);
+            Vector l = lightSource.getL(geoPoint.point);
             double nl = alignZero(n.dotProduct(l));
+            if (unshaded(geoPoint, l,lightSource,n) && (nl * nv > 0)) {
+                    Color iL = lightSource.getIntensity(geoPoint.point);
+                    Color calcDiffusive = calcDiffusive(material, nl, iL);
+                    Color calcSpecular = calcSpecular(material, n, l, nl, v, iL);
+                    color = color.add(calcDiffusive, calcSpecular);
 
-            if (nl * nv > 0) { // sign(nl) == sign(nv)
-                Color lightIntensity = lightSource.getIntensity(intersection.point);
-                color = color.add(calcDiffuse(kd, nl, lightIntensity),
-                        calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity));
             }
         }
         return color;
     }
 
     /**
-     * Calculates the diffuse component of light reflection.
+     * Calculation of specular light component
      *
-     * @param kd The diffuse reflection coefficient.
-     * @param nl The dot product between the normal vector and the light vector.
-     * @param lightIntensity The intensity of the light source.
-     * @return The color contribution from the diffuse reflection.
+     * @param material Attenuation coefficient for specular light component
+     * @param n        normal to point
+     * @param l        direction vector from light to point
+     * @param v        direction of ray shot to point
+     * @param intensity
+     * @return Color of specular light component
      */
-    private Color calcDiffuse(Double3 kd, double nl, Color lightIntensity) {
-        return lightIntensity.scale(kd.scale(Math.abs(nl)));
+    private Color calcSpecular(Material material, Vector n, Vector l, double nl, Vector v, Color intensity) {
+        Vector r = l.add(n.scale(-2 * nl));
+        double minusVR = -alignZero(r.dotProduct(v));
+        if (minusVR <= 0)
+            return Color.BLACK; // view from direction opposite to r vector
+        double pow = Math.pow(minusVR, material.nShininess);
+        Double3 amount = material.kS.scale(pow);
+        return intensity.scale(amount);
     }
 
     /**
-     * Calculates the specular component of light reflection.
+     * Calculation of diffusion light component
      *
-     * @param ks The specular reflection coefficient.
-     * @param l The light vector.
-     * @param n The normal vector.
-     * @param nl The dot product between the normal vector and the light vector.
-     * @param v The view vector.
-     * @param nShininess The shininess coefficient.
-     * @param lightIntensity The intensity of the light source.
-     * @return The color contribution from the specular reflection.
+     * @param material normal to point
+     * @param nl       dot product between n-normal to point and l-direction vector from light to point
+     * @param intensity
+     * @return Color of diffusion light component
      */
-    private Color calcSpecular(Double3 ks, Vector l, Vector n, double nl, Vector v, int nShininess,
-                               Color lightIntensity) {
-        Vector r = l.add(n.scale(-2 * nl)); // nl must not be zero!
-        double minusVR = -alignZero(r.dotProduct(v));
-        if (minusVR <= 0) {
-            return Color.BLACK; // View from direction opposite to r vector
-        }
-        return lightIntensity.scale(ks.scale(Math.pow(minusVR, nShininess)));
+    private Color calcDiffusive(Material material, double nl, Color intensity) {
+        double abs = Math.abs(nl);
+        Double3 scale = material.kD.scale(abs);
+        return intensity.scale(scale);
     }
 }
