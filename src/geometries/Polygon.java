@@ -1,6 +1,8 @@
 package geometries;
 
 import primitives.*;
+import java.util.ArrayList;
+
 import static primitives.Util.*;
 import java.util.List;
 
@@ -87,5 +89,34 @@ public class Polygon extends Geometry {
     @Override
     public Material getMaterial() {
         return _material;
+    }
+    
+    /**
+     * Finds intersections between the given ray and the list of points.
+     * @param ray The ray to find intersections with.
+     * @return A list of points representing the intersections with the ray.
+     */
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+         List <Point> intersectionList = _plane.findIntersections(ray);
+            if(intersectionList == null)
+                return null;
+            Point intersectionPoint = intersectionList.getFirst();
+            List <Double> listNum = new ArrayList<>();
+            // Check if intersection point is inside the polygon
+            for (int i = 0; i < vertices.size(); i++) {
+                Vector v1 =  vertices.get(i).subtract(ray.getP0());
+                Vector v2 =  vertices.get((i+1)%vertices.size()).subtract(ray.getP0());
+                Vector n = v1.crossProduct(v2);
+                double num = n.dotProduct(ray.getDir());
+                if (isZero(num)) {
+                    return null;
+                }
+                listNum.add(num);
+            }
+            if (listNum.stream().allMatch(value -> value > 0) || listNum.stream().allMatch(value -> value < 0)) {
+                return List.of(new GeoPoint(this,intersectionPoint));
+            }
+            return null;
     }
 }

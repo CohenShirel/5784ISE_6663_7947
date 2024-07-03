@@ -97,6 +97,14 @@ public class Double3 {
     }
 
     /**
+     * Checks whether all the numbers are lower than a test number
+     * @param  k the test number
+     * @return   true if all the numbers are less than k, false otherwise
+     */
+
+    public boolean lowerThan(double k) { return _d1 < k && _d2 < k && _d3 < k; }
+    
+    /**
      * Reduce (divide) floating point triad by a number into a new triad where each
      * number is divided by the number
      *

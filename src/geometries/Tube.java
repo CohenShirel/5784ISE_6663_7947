@@ -46,4 +46,14 @@ public class Tube extends Geometry{
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         return null;
     }
+    /**
+     * Find intersections of a ray with geo points.
+     *
+     * @param  ray   the ray to find intersections with
+     * @return      a list of geo points representing the intersections
+     */
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+        return null;
+    }
 }

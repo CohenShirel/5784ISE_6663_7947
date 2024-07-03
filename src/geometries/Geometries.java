@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Geometries extends Intersectable {
     List<Intersectable> _intersectables;
+    private final List<Intersectable> geometries = new LinkedList<>();
+
 
     public Geometries() {
         _intersectables = new LinkedList<Intersectable>();
@@ -45,5 +47,20 @@ public class Geometries extends Intersectable {
 
         return intersection;
     }
+
+	@Override
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+        List<GeoPoint> result = null;
+        for (Intersectable geometry : geometries) {
+            List<GeoPoint> intersections = geometry.findGeoIntersectionsHelper(ray,maxDistance);
+            if (intersections != null) {
+                if (result == null)
+                    result = new LinkedList<>();
+                result.addAll(intersections);
+            }
+        }
+        return result;
+    }
+	    
 }
 
