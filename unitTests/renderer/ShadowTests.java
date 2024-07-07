@@ -1,5 +1,6 @@
 package renderer;
 
+
 import static java.awt.Color.*;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class ShadowTests {
    private final Scene          scene      = new Scene("Test scene");
    /** Camera builder of the tests */
    private final Camera.Builder camera     = Camera.getBuilder()
-	  .setDirection(new Vector(0, 0, -1), Vector.Y)
+      .setDirection(new Vector(0, 0, -1), Vector.Y)
       .setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
       .setVpSize(200, 200)
       .setRayTracer(new SimpleRayTrancer(scene));
