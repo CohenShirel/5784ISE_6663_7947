@@ -18,8 +18,9 @@ public class SimpleRayTrancer extends RayTracerBase {
 private static final double EPS = 0.1;
 private static final double MIN_CALC_COLOR_K = 0.001;
 private static final int MAX_CALC_COLOR_LEVEL = 10;
-private static final Double3 INITIAL_K = Double3.ONE;
-  
+
+
+
 
 /**
 * @param scene the scene to render
