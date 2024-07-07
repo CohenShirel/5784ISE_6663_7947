@@ -1,18 +1,18 @@
 package geometries;
 
 /**
- * An abstract class representing a radial geometry, such as a sphere or a cylinder, defined by a radius.
+ * Class RadialGeometry is the basic class representing a radial geometry in Euclidean geometry
  */
-public abstract class RadialGeometry {
-
-    private double radius;
+public abstract class RadialGeometry extends Geometry{
+    /**
+     * The radius of the geometry
+     */
+    protected final double radius;
 
     /**
-     * Constructs a new RadialGeometry object with the specified radius.
-     *
-     * @param radius The radius of the radial geometry.
+     * @param radius the radius of the geometry
      */
-    RadialGeometry(double radius) {
+    public RadialGeometry(double radius) {
         this.radius = radius;
     }
 }

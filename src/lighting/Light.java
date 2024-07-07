@@ -3,28 +3,24 @@ package lighting;
 import primitives.Color;
 
 /**
- * Light abstract class representing the light of the scene
+ * Light class represents a light source in the scene.
  */
 abstract class Light {
-
-    protected Color intensity; //the geometry's color intensity light
+    protected Color intensity;
 
     /**
-     * constructor for the intensity
-     *
-     * @param color of the intensity of the source of the light
+     * @param intensity the intensity color
      */
-    protected Light(Color color) {
-        this.intensity = color;
+    protected Light(Color intensity) {
+        this.intensity = intensity;
     }
 
     /**
-     * get the light's intensity
+     * A method to retrieve the intensity color.
      *
-     * @return the intensity
+     * @return         the intensity color
      */
     public Color getIntensity() {
-        return this.intensity;
+        return intensity;
     }
-    
 }

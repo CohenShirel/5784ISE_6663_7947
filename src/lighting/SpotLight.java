@@ -3,73 +3,60 @@ package lighting;
 import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
-import static primitives.Util.alignZero;
+
+import static java.lang.Math.max;
+import static primitives.Util.isZero;
 
 /**
- * The {@code SpotLight} class extends the {@code PointLight} class and represents a light source that has
- * a specific direction and position, emitting light with a specified intensity.
- * The light intensity decreases with distance from the light source according to the attenuation factors.
- * The direction vector is normalized upon initialization.
- * <p>This class includes methods to set the attenuation factors: kc (constant attenuation),
- * kl (linear attenuation), and kq (quadratic attenuation).</p>
+ * SpotLight class represents a light source in the scene.
  */
-public class SpotLight extends PointLight {
+public class SpotLight extends PointLight{
+	/**
+	 * @param intensity the intensity color
+	 */
+	private Vector direction;
 
-    private final Vector direction;
-    private double narrowBeam = 1;
+	private double narrowBeam = 1d;
 
-    /**
-     * Constructs a {@code SpotLight} with a specified direction, position, and intensity.
-     *
-     * @param direction the direction of the spotlight
-     * @param position  the position of the spotlight
-     * @param intensity the intensity of the light emitted by the spotlight
-     */
-    public SpotLight(Color intensity, Point position, Vector direction) {
-        super(intensity, position);
-        this.direction = direction.normalize();
-    }
+	/**
+	 * Constructor of the class
+	 * @param intensity the intensity color
+	 * @param position the position
+	 * @param direction the direction
+	 */
+	public SpotLight(Color intensity, Point position, Vector direction) {
+		super(intensity, position);
+		this.direction = direction.normalize();
+	}
+	/**
+	 * Set the narrow beam value.
+	 *
+	 * @param  i  the value to set for the narrow beam
+	 * @return    the updated LightSource object
+	 */
+	public SpotLight setNarrowBeam(int i) {
+		this.narrowBeam = i;
+		return this;
+	}
 
-    @Override
-    public SpotLight setKc(Double kC) {
-        return (SpotLight) super.setKc(kC);
-    }
+	/**
+	 * A method to retrieve the intensity color.
+	 *
+	 * @param p the point at which to calculate the intensity
+	 * @return the intensity color
+	 */
+	@Override
+	public Color getIntensity(Point p) {
+		double projection = this.direction.dotProduct(getL(p));
+		if (isZero(projection)) {
+			return Color.BLACK;
+		}
+		double factor = max(0, projection);
+		factor = Math.pow(factor, narrowBeam);
 
-    @Override
-    public SpotLight setKl(Double kL) {
-        return (SpotLight) super.setKl(kL);
-    }
+		return super.getIntensity(p).scale(factor);
+	}
 
-    @Override
-    public SpotLight setKq(Double kQ) {
-        return (SpotLight) super.setKq(kQ);
-    }
-
-    /**
-     * Get the intensity of the light at a given point.
-     *
-     * @param point the point at which to calculate the intensity
-     * @return the intensity of the light at point
-     */
-    @Override
-    public Color getIntensity(Point point) {
-        double cos = alignZero(direction.dotProduct(getL(point)));
-        return narrowBeam != 1
-                ? super.getIntensity(point).scale(Math.pow(Math.max(0, direction.dotProduct(getL(point))), narrowBeam))
-                : super.getIntensity(point).scale(Math.max(0, direction.dotProduct(getL(point))));
-    }
-
-    /**
-     * Set the narrow beam factor.
-     * The narrow beam factor adjusts the concentration of the light beam.
-     *
-     * @param narrowBeam the narrow beam factor
-     * @return the SpotLight object
-     */
-    public SpotLight setNarrowBeam(double narrowBeam) {
-        this.narrowBeam = narrowBeam;
-        return this;
-    }
 	/**
 	 * Calculates the distance from the current point to the given point.
 	 *

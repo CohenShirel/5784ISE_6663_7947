@@ -20,7 +20,7 @@ class IntegrationTest {
             .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setVpDistance(1).setVpSize(3, 3)
             .setImageWriter(new ImageWriter("Test", 3, 3))
-            .setRayTracer(new SimpleRayTrancer(new Scene("Test")));
+            .setRayTracer(new SimpleRayTracer(new Scene("Test")));
 
     List<Point> pointsIntersections;
 
@@ -33,7 +33,7 @@ class IntegrationTest {
 
         //TC02: Second test case
         cameraBuilder.setLocation(new Point(0,0,0.5));
-        cameraBuilder.build(); 
+        cameraBuilder.build();
         assertEquals(18, getIntersections(new Sphere(new Point(0, 0, -2.5), 2.5)).size(),"Wrong number of intersections in case 2");
 
         //TC03: Third test case

@@ -6,45 +6,22 @@ import primitives.Vector;
 
 import java.util.List;
 
-public class Tube extends Geometry{
-    protected Ray _axisRay;
-    protected double _radius;
+/**
+ * Class Tube is the basic class representing a tube in Euclidean geometry
+ */
+public class Tube extends RadialGeometry {
+    /**
+     * The radius of the tube
+     */
+    protected final Ray axis;
 
-    public Tube(Ray axisRay, double radius) {
-        _axisRay = axisRay;
-        _radius = radius;
-    }
-
-    @Override
-    public String toString() {
-        return "Tube{" +
-                "_axisRay=" + _axisRay +
-                ", _radius=" + _radius +
-                '}';
-    }
-
-    @Override
-    public Vector getNormal(Point point) {
-        Vector centeredVectorDirection = _axisRay.getDir();
-        Point p0 = _axisRay.getP0();
-
-        //If the projection equals to zero.
-        double projection = centeredVectorDirection.dotProduct(point.subtract(p0));
-        if (projection == 0) throw new IllegalArgumentException("The projection not allowed to be 0");
-
-        //Calculate the point on the centered ray of the tube to calculate the normal with it.
-        Point center = p0.add(centeredVectorDirection.scale(projection));
-
-        //Calculate the normal
-        Vector v = point.subtract(center);
-
-        //Return the normalized normal
-        return v.normalize();
-    }
-
-    @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        return null;
+    /**
+     * @param radius the radius of the tube
+     * @param axis the axis of the tube
+     */
+    public Tube(double radius, Ray axis) {
+        super(radius);
+        this.axis = axis;
     }
     /**
      * Find intersections of a ray with geo points.
@@ -56,4 +33,15 @@ public class Tube extends Geometry{
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
         return null;
     }
+    /**
+     * @param p the point at which to calculate the normal vector
+     * @return the normal vector of the tube at the point
+     */
+    @Override
+    public Vector getNormal(Point p) {
+        double t = axis.getT(p);
+        Point o =  axis.getPoint(t);
+        return o.subtract(p).normalize();
+    }
+
 }

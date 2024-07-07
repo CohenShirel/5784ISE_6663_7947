@@ -1,55 +1,44 @@
 package geometries;
 
-import primitives.Point;
+
 import primitives.Ray;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Composite class for all geometries object implementing {@link Intersectable}
+ * The Geometries class represents a collection of geometries in the scene.
  */
-public class Geometries extends Intersectable {
-    List<Intersectable> _intersectables;
+public class Geometries extends Intersectable{
     private final List<Intersectable> geometries = new LinkedList<>();
 
-
     public Geometries() {
-        _intersectables = new LinkedList<Intersectable>();
     }
 
-    public Geometries(Intersectable...intersectables) {
-        _intersectables = new LinkedList<Intersectable>();
-        Collections.addAll(_intersectables,intersectables);
+    /**
+     * @param geometries - the list of geometries
+     */
+    public Geometries(Intersectable...geometries) {
+        add(geometries);
     }
 
-    public void add(Intersectable...intersectables){
-        Collections.addAll(_intersectables,intersectables);
+    /**
+     * Adds the given geometries to the list of geometries.
+     *
+     * @param  geometries  the geometries to add
+     */
+    public void add(Intersectable...geometries) {
+        this.geometries.addAll(List.of(geometries));
     }
 
+    /**
+     * Finds intersections of a ray with the geometries in the list.
+     *
+     * @param  ray  the ray to find intersections with
+     * @return      a list of intersection points
+     */
     @Override
-    //=== find intersection point between a geometry (we know now) and the ray ===//
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-
-        List<GeoPoint> intersection = null;
-
-        for (Intersectable geometry : this._intersectables) { // loop on all the geometry that implement "the Intersectables"
-            // list of crossing point between the ray ana the geometry//
-            var geoIntersections = geometry.findGeoIntersections(ray);
-            if (geoIntersections != null) { // if there is a crossing
-                if (intersection == null) {
-                    intersection = new LinkedList<>();
-                }
-                intersection.addAll(geoIntersections);
-            }
-        }
-
-        return intersection;
-    }
-
-	@Override
-	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
         List<GeoPoint> result = null;
         for (Intersectable geometry : geometries) {
             List<GeoPoint> intersections = geometry.findGeoIntersectionsHelper(ray,maxDistance);
@@ -61,6 +50,4 @@ public class Geometries extends Intersectable {
         }
         return result;
     }
-	    
 }
-

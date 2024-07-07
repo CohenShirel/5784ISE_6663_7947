@@ -1,49 +1,67 @@
 package geometries;
 
-
 import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GeometriesTest {
+    Geometries geometries;
 
     @Test
     void findIntersections() {
-        Plane plane = new Plane(new Point(1, 0, 0), new Point(2, 0, 0), new Point(1.5, 0, 1));
-        Sphere sphere = new Sphere(new Point(1, 0, 1), 1);
-        Triangle triangle = new Triangle(new Point(0, 2, 0), new Point(2, 2, 0), new Point(1.5, 2, 2));
-        Geometries geometries = new Geometries(plane, sphere, triangle);
+        //============== Equivalence Partitions Tests ===============
+        Geometries geometries01 = new Geometries(
+                new Sphere(new Point(0,-2,0), 1),
+                new Sphere(new Point(2,0,0), 1),
+                new Triangle(new Point(0,0,0), new Point(0,1,0), new Point(-1,0,0)));
+        List<Point> result01 = geometries01.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)));
+
+        //TC01: Test some of the geometries are intersecting but other don't
+        assertEquals(4,result01.size(),"ERROR: some of the geometries are not intersecting");
+        //============= Boundary Values Tests ==================
+        //TC11: Test empty geometries collection
+        Geometries geometries11 = new Geometries();
+        assertNull(geometries11.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0))),"ERROR: some of the geometries are not intersecting");
+
+        //TC12: Test none of the geometries are intersecting
+        Geometries geometries12 = new Geometries(
+                new Sphere(new Point(0,-2,0), 1),
+                new Sphere(new Point(2,0,0), 1),
+                new Triangle(new Point(0,0,0), new Point(0,1,0), new Point(-1,0,0)));
+        assertNull(geometries12.findIntersections(new Ray(new Point(-1,-4,0),new Vector(-2,-2,0))),"ERROR: some of the geometries are not intersecting");
+
+        //TC13: Test only 1 of the geometries are intersecting
+        Geometries geometries13 = new Geometries(
+                new Sphere(new Point(2,0,0), 1),
+                new Triangle(new Point(0,0,0), new Point(0,1,0), new Point(-1,0,0)));
+        List<Point> result13 = geometries13.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)));
+        assertEquals(2,result13.size(),"ERROR: some of the geometries are not intersecting");
+              //TC 14: Test all the geometries are intersecting
+        Geometries geometries14 = new Geometries(
+                new Sphere(new Point(0,-2,0), 1),
+                new Sphere(new Point(2,0,0), 1),
+                new Triangle(new Point(7,2.5,2), new Point(7,2.5,-2), new Point(4,4,0)));
+        List<Point> result14 = geometries14.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)));
+        assertEquals(5,result14.size(),"ERROR: some of the geometries are not intersecting");
 
 
-        // ============ Equivalence Partitions Tests ==============
-        //בדיקה TC01: קרן שמצטלבת עם יותר מאובייקט אחד (אבל לא עם כולם)
-        Ray rayManyObjectIntersect = new Ray(new Point(1, 1.5, 1), new Vector(0, -1, 0));
-        assertEquals(3, geometries.findIntersections(rayManyObjectIntersect).size(),
-                "More then one object intersect (but not all the objects)");
+        //Test with distance
 
-        // =============== Boundary Values Tests ==================
-        //TC10: Empty list
-        //בודקים קרן שלא מצטלבת עם אף אובייקט (כי הרשימה ריקה)
-        Geometries geometriesEmptyList = new Geometries();
-        Ray rayEmptyList = new Ray(new Point(1, 1, 1), new Vector(0, -1, 0));
-        assertNull(geometriesEmptyList.findIntersections(rayEmptyList), "The List empty");
+        //TC21: Test all the geometries are intersecting with max distance
+        List<Point> result02 = geometries01.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)),1000);
+        assertEquals(4,result02.size(),"ERROR: some of the geometries are not intersecting");
 
-        // TC11: אין חיתוך עם אף אחד מהאובייקטים
-        Ray rayNoIntersections = new Ray(new Point(1, -1, 1), new Vector(0, -1, 0));
-        assertNull(geometries.findIntersections(rayNoIntersections), "The ray suppose not intersect the objects");
+        //TC21: Test some of the geometries are intersecting but other don't because of the max distance
+        List<Point> result03 = geometries01.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)),2);
+        assertEquals(1,result03.size(),"ERROR: some of the geometries are not intersecting");
 
-        //TC12: חיתוך עם אובייקט אחד בלבד
-        Ray rayOneObjectIntersect = new Ray(new Point(1.5, 1.5, 0.5), new Vector(0, 1, 0));
-        assertEquals(1, geometries.findIntersections(rayOneObjectIntersect).size(),
-                "Suppose to be one intersection point (one object intersect)");
-
-        //TC13: חיתוך עם כל האובייקטים
-        Ray rayAllObjectIntersect = new Ray(new Point(1, 2.5, 1), new Vector(0, -1, 0));
-        assertEquals(4, geometries.findIntersections(rayAllObjectIntersect).size(),
-                "Suppose to be 4 intersection points");
-
+        //TC21: Test none of the geometries are intersecting because of the max distance
+        List<Point> result04 = geometries01.findIntersections(new Ray(new Point(-1,-4,0),new Vector(2,2,0)),1);
+        assertNull(result04,"ERROR: the geometries aren't intersecting because of the max distance");
     }
 }

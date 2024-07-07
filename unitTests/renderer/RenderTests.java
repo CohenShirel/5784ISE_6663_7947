@@ -23,7 +23,7 @@ public class RenderTests {
     private final Scene          scene  = new Scene("Test scene");
     /** Camera builder of the tests */
     private final Camera.Builder camera = Camera.getBuilder()
-            .setRayTracer(new SimpleRayTrancer(scene))
+            .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(Point.ZERO).setDirection( new Vector(0, 0, -1), Vector.Y)
             .setVpDistance(100)
             .setVpSize(500, 500);
@@ -80,4 +80,6 @@ public class RenderTests {
                 .printGrid(100, new Color(WHITE))
                 .writeToImage();
     }
+
+ 
 }
