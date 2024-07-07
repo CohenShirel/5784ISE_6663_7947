@@ -70,4 +70,14 @@ public class SpotLight extends PointLight {
         this.narrowBeam = narrowBeam;
         return this;
     }
+	/**
+	 * Calculates the distance from the current point to the given point.
+	 *
+	 * @param p the point to calculate the distance to
+	 * @return the distance from the current point to the given point
+	 */
+	@Override
+	public double getDistance(Point p) {
+		return super.getDistance(p);
+	}
 }

@@ -1,6 +1,8 @@
 package geometries;
 
 import primitives.Color;
+import static primitives.Util.alignZero;
+
 import primitives.Material;
 import primitives.Point;
 import primitives.Ray;
@@ -118,5 +120,39 @@ public class Sphere extends Geometry {
         }
         return null;
     }
+    /**
+     * Finds the intersections of a given ray with the geometry of the object.
+     *
+     * @param  ray  the ray to find intersections with
+     * @return      a list of GeoPoint objects representing the intersections, or null if there are no intersections
+     */
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+        double d;
+        double Tm=0;
+        if (_center.equals(ray.getP0())) {
+            d = 0;
+        }
+        else {
+            Vector u = _center.subtract(ray.getP0());
+            Tm = ray.getDir().dotProduct(u);
+            d = Math.sqrt(u.lengthSquared() - Tm * Tm);
+            if (d >= _radius) {
+                return null;
+            }
+        }
+        double Th = Math.sqrt(_radius * _radius - d * d);
+        double t1 = Tm - Th;
+        double t2 = Tm + Th;
+        if (t1 > 0 && t2 > 0 && t1 != t2 && alignZero(t1 - maxDistance) <= 0 && alignZero(t2 - maxDistance) <= 0) {
+            return List.of(new GeoPoint(this,ray.getPoint(t1)),new GeoPoint(this,ray.getPoint(t2)));
+        }
+        if (t1 > 0 && alignZero(t1 - maxDistance) <= 0) {
+            return List.of(new GeoPoint(this,ray.getPoint(t1)));
+        }
+        if (t2 > 0 && alignZero(t2 - maxDistance) <= 0) {
+            return List.of(new GeoPoint(this,ray.getPoint(t2)));
+        }
+        return null;
+    }
 }
-

@@ -11,6 +11,17 @@ public class Material {
 
     // the shininess factor of the object material type//
     public int nShininess = 0;
+    /**
+	 * kR is the reflective coefficient of the material.
+	 */
+	public Double3 kR = Double3.ZERO;
+	/**
+	 * kT is the transparent coefficient of the material.
+	 */
+	public Double3 kT = Double3.ZERO;
+	/**
+	 * nShininess is the shininess of the material.
+	 */
 
     /**
      * set KD function - the diffuse light factor
@@ -56,6 +67,48 @@ public class Material {
         this.kS = new Double3(kS);
         return this;
     }
+    /**
+	 * Sets the kR value.
+	 *
+	 * @param  kR  the new kR value
+	 * @return     the updated Material object
+	 */
+	public Material setKr(Double3 kR) {
+		this.kR = kR;
+		return this;
+	}
+
+	/**
+	 * Sets the kR value.
+	 *
+	 * @param  kR  the new kR value
+	 * @return     the updated Material object
+	 */
+	public Material setKr(double kR) {
+		this.kR = new Double3(kR);
+		return this;
+	}
+	/**
+	 * Sets the kT value.
+	 *
+	 * @param  kT  the new kD value
+	 * @return     the updated Material object
+	 */
+	public Material setKt(Double3 kT) {
+		this.kT = kT;
+		return this;
+	}
+
+	/**
+	 * Sets the kT value.
+	 *
+	 * @param  kT  the new kD value
+	 * @return     the updated Material object
+	 */
+	public Material setKt(double kT) {
+		this.kT = new Double3(kT);
+		return this;
+	}
 
     /**
      * Set the shininess factor of the material

@@ -9,7 +9,7 @@ import static primitives.Util.isZero;
 
 //Opening a Class for representation Ray in the space (3D)//
 public class Ray {
-
+    private static final double DELTA = 0.1;
     private final Point p0;
     private final Vector dir;
 
@@ -26,6 +26,22 @@ public class Ray {
 
     public Vector getDir() {
         return this.dir;
+    }
+    
+    /**
+     * Constructor for ray deflected by DELTA
+     *
+     * @param p origin
+     * @param n   normal vector
+     * @param dir direction
+     */
+    public Ray(Point p, Vector n, Vector dir) {
+        this.dir = dir.normalize();
+        double nv = n.dotProduct(this.dir);
+        Vector delta  =n.scale(DELTA);
+        if (nv < 0)
+            delta = delta.scale(-1);
+        this.p0 = p.add(delta);
     }
 
     @Override

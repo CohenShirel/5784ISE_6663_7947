@@ -5,7 +5,6 @@ import primitives.*;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * an abstract class for finding the intersection point between the ray and the complex object
  *
@@ -16,7 +15,6 @@ import java.util.Objects;
  * We define here only the "findIntersection" function to find intersection points between the ray
  * and the complex object
  */
-
 public abstract class Intersectable {
     /*
      * @param ray {@link Ray} pointing toward the object
@@ -28,10 +26,11 @@ public abstract class Intersectable {
                 : geoList.stream().map(gp -> gp.point).toList();
     }
 
+
     //======== the NVI design pattern =======//
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
-    public final List<GeoPoint> findGeoIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
     }
 
@@ -40,6 +39,7 @@ public abstract class Intersectable {
      * because we added the emission light for each geometry and if we want to calculate the color at the point
      * we have to mind the geometry's color (this class is PDS)
      */
+    
     public static class GeoPoint {
         public final Geometry geometry;
         public final Point point;
@@ -49,7 +49,7 @@ public abstract class Intersectable {
             this.geometry = geometry;
             this.point = point;
         }
-
+      
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -71,4 +71,14 @@ public abstract class Intersectable {
                     '}';
         }
     }
+    
+    public final List<Point> findIntersections(Ray ray, double maxDistance) {
+        var geoList = findGeoIntersections(ray, maxDistance);
+        return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
+    }
+    public final List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) {
+        return findGeoIntersectionsHelper(ray, maxDistance);
+    }
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
+
 }

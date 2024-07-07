@@ -103,4 +103,19 @@ public class Plane extends Geometry {
         // cross the geometry
         return List.of(new GeoPoint(this, ray.getPoint(t)));
     }
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
+        double numerator = _normal.dotProduct(_q0.subtract(ray.getP0()));
+        double denominator = _normal.dotProduct(ray.getDir());
+        if (isZero(denominator))
+        {
+            return null;
+        }
+        double t = alignZero(numerator / denominator);
+        if (t > 0  && alignZero(t - maxDistance) <= 0)
+        {
+            return List.of(new GeoPoint(this,ray.getPoint(t)));
+        }
+        return null;
+    }
 }
