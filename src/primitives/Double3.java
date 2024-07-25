@@ -95,15 +95,24 @@ public class Double3 {
     public Double3 scale(double rhs) {
         return new Double3(_d1 * rhs, _d2 * rhs, _d3 * rhs);
     }
+     /**
+      * Checks whether all the numbers are lower than a test number
+      * @param  k the test number
+      * @return   true if all the numbers are less than k, false otherwise
+      */
 
-    /**
-     * Checks whether all the numbers are lower than a test number
-     * @param  k the test number
-     * @return   true if all the numbers are less than k, false otherwise
-     */
+     public boolean lowerThan(double k) { 
+    	 return _d1 < k && _d2 < k && _d3 < k; 
+      }
 
-    public boolean lowerThan(double k) { return _d1 < k && _d2 < k && _d3 < k; }
-    
+        /**
+         * Checks whether all the numbers are lower than three numbers in another triad
+         * @param  other other triad
+         * @return       true if all the numbers are less that appropriate numbers in
+         *               other
+         *               triad, false otherwise
+         */
+        public boolean lowerThan(Double3 other) { return _d1 < other._d1 && _d2 < other._d2 && _d3 < other._d3; }
     /**
      * Reduce (divide) floating point triad by a number into a new triad where each
      * number is divided by the number

@@ -1,260 +1,329 @@
 package renderer;
 
-import primitives.Color;
+import primitives.*;
 import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
-import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
-public class Camera implements Cloneable {
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.stream.IntStream;
 
-    private Point p0;
+import static primitives.Util.*;
+
+public class Camera {
+    private Point position;
     private Vector vTo;
     private Vector vUp;
     private Vector vRight;
+    private int height;
+    private int width;
     private double distance;
-    private double width;
-    private double height;
-
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private final SuperSampling antiAliasing = new SuperSampling();
+
 
     /**
-     * Default constructor for the Camera class.
-     * This is a private constructor to prevent direct instantiation.
+     * Camera object constructor
+     *
+     * @param position the Point on which the camera is based
+     * @param vTo the Vector of where the camera is looking at
+     * @param vUp the Vector of the upwards direction of the camera
+     * @throws IllegalArgumentException if vTo and vUp are not orthogonal
      */
-    private Camera() {
-    }
-    
-    public Camera(Point p0, Vector vTo, Vector vUp) {
-        if (!isZero(vTo.dotProduct(vUp))) {
-            throw new IllegalArgumentException("vTo and vUp are not orthogonal");
-        }
+    public Camera(Point position, Vector vTo, Vector vUp) throws IllegalArgumentException {
+        if (!isZero(vTo.dotProduct(vUp)))
+            throw new IllegalArgumentException("vTo and vUp must be orthogonal to each other");
 
-        this.p0 = p0;
+        this.position = position;
         this.vTo = vTo.normalize();
         this.vUp = vUp.normalize();
-        this.vRight = vTo.crossProduct(vUp);
+        this.vRight = this.vTo.crossProduct(this.vUp);
     }
+
+
     /**
-     * Creates a new Builder for constructing Camera instances.
+     * Ray tracing color result
      *
-     * @return a new Builder instance
+     * @param ray ray
+     * @return color
      */
-    public static Builder getBuilder() {
-        return new Builder();
-    } 
-    
-    public Point getP0() { return this.p0; }
-
-    public Vector getvT0() { return this.vTo; }
-
-    public Vector getvUp() { return this.vUp; }
-
-    public Vector getvRight() { return this.vRight; }
-
-    public double getWidth() { return this.width; }
-
-    public double getHeight() { return this.height; }
-
-    public Camera setVPDistance(double distance) {
-        this.distance = distance;
-        return this;
+    private Color castRay(Ray ray) {
+        return this.rayTracer.traceRay(ray);
     }
 
-    public Camera setVPSize(double width, double height) {
+
+    /**
+     * Get the position of the camera
+     *
+     * @return the position Point of the camera
+     */
+    public Point getPosition() {
+        return this.position;
+    }
+
+    /**
+     * Get the Vector of where the camera is looking at (vTo)
+     * @return the vTo Vector
+     */
+    public Vector getVTo() {
+        return this.vTo;
+    }
+
+    /**
+     * Get the Vector of the upwards direction of the camera (vUp)
+     *
+     * @return the vUp Vector
+     */
+    public Vector getVUp() {
+        return this.vUp;
+    }
+
+    /**
+     * Get the Vector of the rightwards direction of the camera (vRight)
+     *
+     * @return the vRight Vector
+     */
+    public Vector getVRight() {
+        return this.vRight;
+    }
+
+    /**
+     * Get the View Plane height
+     *
+     * @return View Plane height
+     */
+    public int getHeight() {
+        return this.height;
+    }
+
+    /**
+     * Get the View Plane width
+     *
+     * @return View Plane width
+     */
+    public int getWidth() {
+        return this.width;
+    }
+
+    /**
+     * Get the distance of the camera from the View Plane
+     *
+     * @return the distance of the camera from the View Plane
+     */
+    public double getDistance() {
+        return this.distance;
+    }
+
+
+    /**
+     * Set the View Plane size
+     *
+     * @param width View Plane width
+     * @param height View Plane height
+     * @return the updated Camera object
+     */
+    public Camera setVPSize(int width, int height) {
         this.width = width;
         this.height = height;
         return this;
     }
 
-    public Ray constructRay(int Nx, int Ny, int j, int i) {
-        double Ry = (double) this.height / Ny;
-        double Rx = (double) this.width / Nx;
-
-        Point Pc = this.p0.add(this.vTo.scale(this.distance));
-        Point Pij = Pc;
-        double Yi = -(i - ((Ny - 1) / 2d)) * Ry;
-        double Xj = (j - ((Nx - 1) / 2d)) * Rx;
-
-        if (!isZero(Xj)) {
-            Pij = Pij.add(this.vRight.scale(Xj));
-        }
-        if (!isZero(Yi)) {
-            Pij = Pij.add(this.vUp.scale(Yi));
-        }
-        return new Ray(this.p0, Pij.subtract(this.p0));
+    /**
+     * Set the View Plane distance from the camera
+     *
+     * @param distance distance from the camera
+     * @return the updated Camera object
+     */
+    public Camera setVPDistance(double distance) {
+        this.distance = distance;
+        return this;
     }
 
+    /**
+     * Set the Image Writer
+     *
+     * @param imageWriter Image Writer
+     * @return the updated Camera object
+     */
     public Camera setImageWriter(ImageWriter imageWriter) {
         this.imageWriter = imageWriter;
         return this;
     }
 
+    /**
+     * Set the Ray Tracer Base
+     *
+     * @param rayTracer Ray Tracer Base
+     * @return the updated Camera object
+     */
     public Camera setRayTracer(RayTracerBase rayTracer) {
         this.rayTracer = rayTracer;
         return this;
     }
 
-    public Camera renderImage() {
+    /**
+     * Set the anti aliasing rays grid
+     *
+     * @param amount of rays
+     * @return the updated Camera object
+     */
+    public Camera setAntiAliasing(int amount) {
+        this.antiAliasing.setSize(amount);
+        return this;
+    }
+
+     /**
+     * Creates the rays that pass at the center of the requested pixel on the View Plane
+     *
+     * @param nX amount of column in the View Plane
+     * @param nY amount of rows in the View Plane
+     * @param j pixel column index
+     * @param i pixel row index
+     * @return the ray that passes at the center of the requested pixel on the View Plane
+     */
+    public List<Ray> constructRay(int nX, int nY, int j, int i) {
+        // Image Center
+        Point pIJ = this.position.add(this.vTo.scale(this.distance));
+
+        // Ratio (pixel width & height)
+        double rX = (double) this.width / nX;
+        double rY = (double) this.height / nY;
+
+        // Construct rays
+        double xJ = (j - ((double) (nX - 1) / 2)) * rX;
+        double yI = -(i - ((double) (nY - 1) / 2)) * rY;
+
+        if (xJ != 0)
+            pIJ = pIJ.add(vRight.scale(xJ));
+        if (yI != 0)
+            pIJ = pIJ.add(vUp.scale(yI));
+
+        return this.antiAliasing.constructRaysThroughGrid(rX, rY,position, pIJ, this.vUp, this.vRight);
+    }
+
+    /**
+     * Renders the image
+     *
+     * @throws MissingResourceException if not all fields are initialized
+     */
+    public Camera renderImage() throws MissingResourceException {
+        if (this.position == null ||
+            this.vTo == null ||
+            this.vUp == null ||
+            this.vRight == null ||
+            this.height <= 0 ||
+            this.width <= 0 ||
+            this.distance <= 0 ||
+            this.imageWriter == null ||
+            this.rayTracer == null)
+            throw new MissingResourceException("Missing resources", "Camera", "");
+
+        int nx = this.imageWriter.getNx();
+        int ny = this.imageWriter.getNy();
+
+        IntStream.range(0, ny).parallel().forEach(i -> {
+            IntStream.range(0, nx).parallel().forEach(j -> {
+                List<Ray> rays = constructRay(nx, ny, j, i);
+                Color color = Color.BLACK;
+                for (Ray ray : rays)
+                    color = color.add(this.rayTracer.traceRay(ray));
+
+                this.imageWriter.writePixel(j, i, color.reduce(rays.size()));
+            });
+        });
+
+        return this;
+    }
+
+    /**
+     * Draws the grid into the image with the provided color
+     *
+     * @param interval grid slot size
+     * @param color color
+     * @throws MissingResourceException if the Image Writer field is uninitialized
+     */
+    public void printGrid(int interval, Color color) throws MissingResourceException {
         if (this.imageWriter == null)
-            throw new UnsupportedOperationException("Missing imageWriter");
-        if (this.rayTracer == null)
-            throw new UnsupportedOperationException("Missing rayTracerBase");
+            throw new MissingResourceException("Missing ImageWriter", "Camera", "");
 
-        for (int i = 0; i < this.imageWriter.getNy(); i++) {
-            for (int j = 0; j < this.imageWriter.getNx(); j++) {
-                Color color = castRay(j, i);
-                this.imageWriter.writePixel(j, i, color);
+        int nx = this.imageWriter.getNx();
+        int ny = this.imageWriter.getNy();
+
+        for (int i = 0; i < ny; i++) {
+            for (int j = 0; j < nx; j++) {
+                if (i % interval == 0 || j % interval == 0)
+                    this.imageWriter.writePixel(i, j, color);
             }
         }
-        return this;
     }
 
-    public Camera printGrid(int interval, Color color) {
-        for (int i = 0; i < imageWriter.getNx(); i++) {
-            for (int j = 0; j < imageWriter.getNy(); j++) {
-                if (i % interval == 0 || j % interval == 0) {
-                    imageWriter.writePixel(i, j, color);
-                }
-            }
-        }
-        return this;
-    }
+    /**
+     * Writes the image to a file
+     *
+     * @throws MissingResourceException if the Image Writer field is uninitialized
+     */
+    public void writeToImage() throws MissingResourceException {
+        if (this.imageWriter == null)
+            throw new MissingResourceException("Missing ImageWriter", "Camera", "");
 
-    public Camera writeToImage() {
         this.imageWriter.writeToImage();
+    }
+
+    /**
+     * Moves the camera by a Vector
+     *
+     * @param moveDirection the movement vector
+     * @return the updated Camera object
+     */
+    public Camera moveCamera(Vector moveDirection) {
+        this.position = this.position.add(moveDirection);
         return this;
     }
 
-    private Color castRay(int j, int i) {
-        Ray ray = constructRay(
-                this.imageWriter.getNx(),
-                this.imageWriter.getNy(),
-                j,
-                i);
-        return this.rayTracer.traceRay(ray);
+    /**
+     * Moves the camera to another Point
+     *
+     * @param newPosition new position point
+     * @return the updated Camera object
+     */
+    public Camera moveCamera(Point newPosition) {
+        this.position = newPosition;
+        return this;
     }
 
-    public static class Builder {
-    	 private final Camera camera = new Camera();
-    	 /**
-          * Sets the location of the camera.
-          *
-          * @param location the location of the camera
-          * @return this Builder instance
-          */
-         public Builder setLocation(Point location) {
-             camera.p0 = location;
-             return this;
-         }
-
-         /**
-          * Sets the direction of the camera.
-          *
-          * @param toVector the vector pointing forward
-          * @param upVector the vector pointing upwards
-          * @return this Builder instance
-          * @throws IllegalArgumentException if the vectors are not perpendicular or not normalized
-          */
-         public Builder setDirection(Vector toVector, Vector upVector) {
-             if (toVector.dotProduct(upVector) != 0) {
-                 throw new IllegalArgumentException("The vectors must be orthogonal");
-             }
-             camera.vTo = toVector.normalize();
-             camera.vUp = upVector.normalize();
-             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
-             return this;
-         }
-
-         /**
-          * Sets the size of the view plane.
-          *
-          * @param width  the width of the view plane
-          * @param height the height of the view plane
-          * @return this Builder instance
-          * @throws IllegalArgumentException if width or height is not positive
-          */
-         public Builder setVpSize(double width, double height) {
-             camera.width = width;
-             camera.height = height;
-             return this;
-         }
-
-         /**
-          * Sets the distance between the camera and the view plane.
-          *
-          * @param distance the distance between the camera and the view plane
-          * @return this Builder instance
-          * @throws IllegalArgumentException if the distance is not positive
-          */
-         public Builder setVpDistance(double distance) {
-             if (distance <= 0) {
-                 throw new IllegalArgumentException("Distance must be a positive value.");
-             }
-             camera.distance = distance;
-             return this;
-         }
-
-         /**
-          * Sets the ImageWriter for the camera.
-          *
-          * @param imageWriter the ImageWriter to set
-          * @return this Builder instance
-          */
-         public Builder setImageWriter(ImageWriter imageWriter) {
-             camera.imageWriter = imageWriter;
-             return this;
-         }
-
-         /**
-          * Sets the RayTracer for the camera.
-          *
-          * @param rayTracer the RayTracer to set
-          * @return this Builder instance
-          */
-         public Builder setRayTracer(RayTracerBase rayTracer) {
-             camera.rayTracer = rayTracer;
-             return this;
-         }
-         
-        public Camera build() {
-            if (camera.p0 == null) {
-                throw new IllegalStateException("Missing rendering data: location (p0)");
-            }
-            if (camera.vUp == null) {
-                throw new IllegalStateException("Missing rendering data: vUp");
-            }
-            if (camera.vTo == null) {
-                throw new IllegalStateException("Missing rendering data: vTo");
-            }
-            if (camera.imageWriter == null) {
-                throw new IllegalStateException("Missing rendering data: imageWriter");
-            }
-            if (camera.rayTracer == null) {
-                throw new IllegalStateException("Missing rendering data: rayTracer");
-            }
-            if (alignZero(camera.width) == 0) {
-                throw new IllegalStateException("Missing rendering data: width");
-            }
-            if (alignZero(camera.height) == 0) {
-                throw new IllegalStateException("Missing rendering data: height");
-            }
-            if (alignZero(camera.distance) == 0) {
-                throw new IllegalStateException("Missing rendering data: distance");
-            }
-
-            camera.vUp = camera.vUp.normalize();
-            camera.vTo = camera.vTo.normalize();
-            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
-            try {
-                return (Camera) camera.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    /**
+     * Rotates the camera on the X axis
+     *
+     * @param angle rotation angle in degrees
+     * @return the updated Camera object
+     */
+    public Camera rotateX(double angle) {
+        this.vUp = this.vUp.rotateX(angle);
+        this.vRight = this.vRight.rotateX(angle);
+        return this;
     }
 
-  
+    /**
+     * Rotates the camera on the Y axis
+     *
+     * @param angle rotation angle in degrees
+     * @return the updated Camera object
+     */
+    public Camera rotateY(double angle) {
+        this.vTo = this.vTo.rotateY(angle);
+        this.vUp = this.vUp.rotateY(angle);
+        return this;
+    }
+
+    /**
+     * Rotates the camera on the Z axis
+     *
+     * @param angle rotation angle in degrees
+     * @return the updated Camera object
+     */
+    public Camera rotateZ(double angle) {
+        this.vTo = this.vTo.rotateZ(angle);
+        this.vRight = this.vRight.rotateZ(angle);
+        return this;
+    }
 }

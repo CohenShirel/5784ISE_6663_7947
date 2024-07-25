@@ -15,8 +15,8 @@ import static primitives.Util.alignZero;
  */
 public class SpotLight extends PointLight {
 
-    private final Vector direction;
-    private double narrowBeam = 1;
+    private Vector direction;
+    private double narrowBeam = 1d;
 
     /**
      * Constructs a {@code SpotLight} with a specified direction, position, and intensity.
@@ -80,4 +80,8 @@ public class SpotLight extends PointLight {
 	public double getDistance(Point p) {
 		return super.getDistance(p);
 	}
+	 @Override
+	    public Vector getL(Point p) {
+	        return p.subtract(super.position).normalize();
+	    }
 }

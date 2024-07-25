@@ -77,32 +77,29 @@ public class Ray {
         }
         return this.p0.add(this.dir.scale(t));
     }
-    public Point findClosestPoint(List<Point> points) {
-        return points == null || points.isEmpty() ? null
-                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
-    }
-
     /**
-     * Return the closest GeoPoint from all intersection GeoPoints
+     * Finds the closest Point in the given list.
      *
-     * @param geoPointList list of intersections
-     * @return {@link GeoPoint}
+     * @param  list  the list of Points
+     * @return       the closest Point in the list
      */
-    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPointList) {
-
-        GeoPoint closestPoint = null;
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> list){
+        if (list == null) {
+            return null;
+        }
+        GeoPoint closestPoint = list.getFirst();
         double minDistance = Double.MAX_VALUE;
-        double geoPointDistance; // the distance between the "this.p0" to each point in the list
-
-        if (!geoPointList.isEmpty()) {
-            for (var geoPoint : geoPointList) {
-                geoPointDistance = this.p0.distance(geoPoint.point);
-                if (geoPointDistance < minDistance) {
-                    minDistance = geoPointDistance;
-                    closestPoint = geoPoint;
-                }
+        for (GeoPoint p : list) {
+            double distance = p0.distance(p.point);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = p;
             }
         }
         return closestPoint;
+    }
+    public Point findClosestPoint(List<Point> intersections) {
+        return intersections == null ? null : findClosestGeoPoint(intersections.stream()
+                .map(p -> new GeoPoint(null, p)).toList()).point;
     }
 }

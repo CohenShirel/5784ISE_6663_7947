@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="unittests"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
+<scene>
+    <ambient-light color="255 191 191" k="1.0" />
+    <geometries>
+        <plane p1="-100 0 -100" p2="0 100 -100" p3="-100 100 -100" />
+        <plane p1="-100 0 -100" p2="0 -100 -100" p3="-100 -100 -100" />
+        <plane p1="100 0 -100" p2="0 -100 -100" p3="100 -100 -100" />
+        <sphere center="0 0 -100" radius="50" />
+        <triangle p1="-50 0 -50" p2="50 0 -50" p3="0 50 -50" />
+    </geometries>
+    <background-color>75 127 190</background-color>
+</scene>
+

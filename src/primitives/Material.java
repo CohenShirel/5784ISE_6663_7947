@@ -120,4 +120,14 @@ public class Material {
         this.nShininess = nShininess;
         return this;
     }
+    /**
+	 * Sets the shininess of the material.
+	 *
+	 * @param  nShininess  the new shininess value
+	 * @return             the updated Material object
+	 */
+	public Material setShininess(int nShininess) {
+		this.nShininess = nShininess;
+		return this;
+	}
 }

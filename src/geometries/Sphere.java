@@ -11,6 +11,8 @@ import primitives.Vector;
 import java.util.List;
 import java.util.Objects;
 
+import geometries.Intersectable.GeoPoint;
+
 public class Sphere extends Geometry {
     private final Point _center;
     private final double _radius;
@@ -39,6 +41,17 @@ public class Sphere extends Geometry {
         _material = material;
         return this;
     }
+    /**
+     * Gets the Geo Point of this object
+     *
+     * @param ray ray
+     * @param t distance from the ray start
+     * @return geo point
+     */
+    private GeoPoint getGeoPoint(Ray ray, double t) {
+        return new GeoPoint(this, ray.getPoint(t));
+    }
+
 
     @Override
     public Color getEmission() {
@@ -128,31 +141,38 @@ public class Sphere extends Geometry {
      */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
-        double d;
-        double Tm=0;
-        if (_center.equals(ray.getP0())) {
-            d = 0;
-        }
-        else {
-            Vector u = _center.subtract(ray.getP0());
-            Tm = ray.getDir().dotProduct(u);
-            d = Math.sqrt(u.lengthSquared() - Tm * Tm);
-            if (d >= _radius) {
-                return null;
-            }
-        }
-        double Th = Math.sqrt(_radius * _radius - d * d);
-        double t1 = Tm - Th;
-        double t2 = Tm + Th;
-        if (t1 > 0 && t2 > 0 && t1 != t2 && alignZero(t1 - maxDistance) <= 0 && alignZero(t2 - maxDistance) <= 0) {
-            return List.of(new GeoPoint(this,ray.getPoint(t1)),new GeoPoint(this,ray.getPoint(t2)));
-        }
-        if (t1 > 0 && alignZero(t1 - maxDistance) <= 0) {
-            return List.of(new GeoPoint(this,ray.getPoint(t1)));
-        }
-        if (t2 > 0 && alignZero(t2 - maxDistance) <= 0) {
-            return List.of(new GeoPoint(this,ray.getPoint(t2)));
-        }
-        return null;
-    }
+    	 Point P0 = ray.getP0();
+         Vector v = ray.getDir();
+
+         Vector u;
+
+         try
+         {
+             u = this._center.subtract(P0);
+         }
+         catch (IllegalArgumentException e)
+         {
+             return List.of(new GeoPoint(this, ray.getPoint(this._radius)));
+         }
+
+         double tm = v.dotProduct(u);
+         double d = Math.sqrt(u.lengthSquared() - tm * tm);
+
+         if (d >= this._radius)
+             return null;
+
+         double th = Math.sqrt(this._radius * this._radius - d * d);
+
+         double t1 = alignZero(tm - th);
+         if (alignZero(t1 - maxDistance) > 0)
+             return null;
+
+         double t2 = alignZero(tm + th);
+         if (t2 <= 0)
+             return null;
+
+         if (alignZero(t2 - maxDistance) >= 0)
+             return t1 <= 0 ? null : List.of(getGeoPoint(ray, t1));
+         return t1 <= 0 ? List.of(getGeoPoint(ray, t2)) : List.of(getGeoPoint(ray, t1), getGeoPoint(ray, t2));
+}
 }
