@@ -3,7 +3,7 @@ package geometries;
 /**
  * An abstract class representing a radial geometry, such as a sphere or a cylinder, defined by a radius.
  */
-public abstract class RadialGeometry {
+public abstract class RadialGeometry extends Geometry {
 
     private double radius;
 

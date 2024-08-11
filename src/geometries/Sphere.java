@@ -20,9 +20,33 @@ public class Sphere extends Geometry {
     private Material _material = new Material();
 
     public Sphere(Point center, double radius) {
+    	 //if bvh improvement is used
+        if (BVH){
+            //create bounding box
+            createBoundingBox();
+        }
         _center = center;
         _radius = radius;
     }
+    
+    @Override
+    public void createBoundingBox() {
+        if (_center != null) {
+            double minX = _center.getX() - _radius;
+            double minY = _center.getY() - _radius;
+            double minZ = _center.getZ() - _radius;
+            double maxX = _center.getX() + _radius;
+            double maxY = _center.getY() + _radius;
+            double maxZ = _center.getZ() + _radius;
+
+            // Create a new BoundingBox object using the calculated minimum and maximum coordinates
+            box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
+        }
+    }
+    
+    
+    
+    
 
     public Point getCenter() {
         return _center;

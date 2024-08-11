@@ -14,6 +14,61 @@ public class Triangle extends Polygon {
     }
 
     @Override
+    public void createBoundingBox() {
+        if (vertices == null)
+            return;
+
+        // Initialize the minimum and maximum coordinates with extreme values
+        double minX = Double.POSITIVE_INFINITY;
+        double minY = Double.POSITIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxY = Double.NEGATIVE_INFINITY;
+        double maxZ = Double.NEGATIVE_INFINITY;
+
+        // Iterate over each vertex in the list of vertices
+        for (Point vertex : vertices) {
+            // Update the minimum and maximum coordinates based on the vertex's components
+            minX = Math.min(minX, vertex.getX());
+            minY = Math.min(minY, vertex.getY());
+            minZ = Math.min(minZ, vertex.getZ());
+            maxX = Math.max(maxX, vertex.getX());
+            maxY = Math.max(maxY, vertex.getY());
+            maxZ = Math.max(maxZ, vertex.getZ());
+        }
+
+        // Create a new BoundingBox object using the calculated minimum and maximum coordinates
+        box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @Override
     public Triangle setMaterial(Material material) {
         super.setMaterial(material);
         return this;

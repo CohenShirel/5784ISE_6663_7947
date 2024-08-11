@@ -1,12 +1,10 @@
 package geometries;
 
+import java.util.List;
+
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 
-/**
- *  This class represents a box
- *
- * @author 
- */
 public class Box {
     private final Geometries box = new Geometries();
 
@@ -116,4 +114,6 @@ public class Box {
                 centerRight.add(vUp.scale(-upScale))
         );
     }
+
+ 
 }

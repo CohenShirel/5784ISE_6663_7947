@@ -17,10 +17,15 @@ public class Camera {
     private int height;
     private int width;
     private double distance;
+    private Point viewPlaneCenter;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
     private final SuperSampling antiAliasing = new SuperSampling();
 
+    /**
+     * Amount of threads for multi threading, if not set is 0, so no multi threading is done
+     */
+    private int threads = 0;
 
     /**
      * Camera object constructor
@@ -202,11 +207,132 @@ public class Camera {
     }
 
     /**
+     * Set the location of the camera
+     * @param nX - width of the view plane
+     * @param nY - height of the view plane
+     * @param j - index in the column
+     * @param i - index in the row
+     * @return Ray
+     */
+    public Ray constructRay2(int nX, int nY, int j, int i){
+        double rY = height / nY;
+        double rX = width / nX;
+        double xJ = (j - ((nX - 1) / 2.0))* rX;
+        double yI = -(i - ((nY - 1) / 2.0)) * rY;
+        Point pIJ = this.viewPlaneCenter;
+        if (xJ != 0)
+            pIJ = pIJ.add(vRight.scale(xJ));
+        if (yI != 0)
+            pIJ = pIJ.add(vUp.scale(yI));
+        Vector Vij = pIJ.subtract(position);
+        return new Ray(position, Vij);
+    }
+    /**
+     * Renders an image using the camera's settings.
+     *
+     * @throws MissingResourceException      if any of the required camera settings are missing
+     * @throws UnsupportedOperationException if the method has not been implemented yet
+     */
+    public ImageWriter renderImage() {
+        try {
+
+            //place has not been set
+            if (position == null)
+                throw new MissingResourceException("missing point place for camera", "Camera", "place");
+
+            //vTo has not been set
+            if (vTo == null)
+                throw new MissingResourceException("missing vTo place for camera", "Camera", "vTo");
+
+            //vUp has not been set
+            if (vUp == null)
+                throw new MissingResourceException("missing vUp place for camera", "Camera", "vUp");
+
+            //vRight has not been set
+            if (vRight == null)
+                throw new MissingResourceException("missing vRight place for camera", "Camera", "vRight");
+
+            //imageWriter has not been set
+            if (imageWriter == null)
+                throw new MissingResourceException("missing imageWriter place for camera", "Camera", "imageWriter");
+
+            //rayTracerBase has not been set
+            if (rayTracer == null)
+                throw new MissingResourceException("missing RayTracerBase place for camera", "Camera", "rayTracerBase");
+
+            //width has not been set
+            if (width == 0.0)
+                throw new MissingResourceException("missing width place for camera", "Camera", "width");
+
+            //height has not been set
+            if (height == 0.0)
+                throw new MissingResourceException("missing height place for camera", "Camera", "height");
+
+
+            //distance has not been set
+            if (distance == 0.0)
+                throw new MissingResourceException("missing distance place for camera", "Camera", "distance");
+
+            int nY = imageWriter.getNy();
+            int nX = imageWriter.getNx();
+            //if not using multi threads
+            if (threads < 1) {
+                //goes through every pixel in view plane  and casts ray, meaning creates a ray for every pixel and sets the color
+                for (int row = 0; row < nY; row++) {
+                    for (int column = 0; column < nX; column++) {
+                        castRay(nX, nY, row, column);
+                    }
+                }
+                return imageWriter;
+
+            }
+            //if using multi threads
+            Pixel.initialize(nY, nX, 1);
+            while (threads-- > 0) {
+                new Thread(() ->
+                {
+                    for (Pixel pixel = new Pixel();
+                         pixel.nextPixel();
+                         Pixel.pixelDone()) {
+                        imageWriter.writePixel(pixel.col, pixel.row, castRay(nX, nY, pixel.row, pixel.col));
+                    }
+                }).start();
+            }
+            Pixel.waitToFinish();
+            return imageWriter;
+        }
+        //if one of the resources was not set
+        catch (MissingResourceException e) {
+            throw new UnsupportedOperationException("renderImage - value not set yet" + e.getKey());
+        }
+    }
+    /**
+     * Casts a ray from the camera through a pixel in the image, and writes the color of the intersection point to the
+     * corresponding pixel in the image.
+     *
+     * @param nX     the number of pixels in the x-direction of the image
+     * @param nY     the number of pixels in the y-direction of the image
+     * @param column the column number of the pixel to cast the ray through
+     * @param row    the row number of the pixel to cast the ray through
+     * @throws MissingResourceException if the imageWriter or rayTracerBase have not been set
+     */
+    private Color castRay(int nX, int nY, int column, int row) {
+
+        //create the ray
+        Ray ray = constructRay2(nX, nY, row, column);
+        //calculates the color of pixel in ray using traceRay method from Class TraceRay
+        Color pixelColor = rayTracer.traceRay(ray);
+        //writes the color of the pixel to image
+        imageWriter.writePixel(row, column, pixelColor);
+        return pixelColor;
+    }
+
+    /**
      * Renders the image
      *
      * @throws MissingResourceException if not all fields are initialized
      */
-    public Camera renderImage() throws MissingResourceException {
+    public Camera renderImage2() throws MissingResourceException {
         if (this.position == null ||
             this.vTo == null ||
             this.vUp == null ||
@@ -324,6 +450,16 @@ public class Camera {
     public Camera rotateZ(double angle) {
         this.vTo = this.vTo.rotateZ(angle);
         this.vRight = this.vRight.rotateZ(angle);
+        return this;
+    }
+    /**
+     * set function for thread - builder design pattern
+     *
+     * @param threads sent threads to set
+     * @return this camera that function was called from
+     */
+    public Camera setThreads(int threads) {
+        this.threads = threads;
         return this;
     }
 }

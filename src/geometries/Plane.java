@@ -17,13 +17,22 @@ public class Plane extends Geometry {
 
     // Creating a plane from a point and a vector.
     public Plane(Point q0, Vector vector) {
+    	 //if bvh improvement is used
+        if (BVH){
+            //create bounding box
+            createBoundingBox();
+        }
         _q0 = q0;
         _normal = vector.normalize();
     }
 
     // Creating a plane from three points.
     public Plane(Point p1, Point p2, Point p3) {
-
+    	 //if bvh improvement is used
+        if (BVH){
+            //create bounding box
+            createBoundingBox();
+        }
         _q0 = p1;
         Vector U = p2.subtract(p1);
         Vector V = p3.subtract(p1);
@@ -31,7 +40,25 @@ public class Plane extends Geometry {
 
         _normal = W.normalize();
     }
-
+    
+    @Override
+    public void createBoundingBox() {
+        //not implemented because plane is never ending so can't be bound in box
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //Getters
     public Point getQ0() {
         return _q0;

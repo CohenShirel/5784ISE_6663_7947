@@ -21,6 +21,15 @@ public abstract class Geometry extends Intersectable {
 	protected Color emission = Color.BLACK; // the geometry's default color
     private Material material = new Material(); // the material the geometry has made of
 
+    
+    public Geometry setBVH(boolean bvh) {
+        BVH = bvh;
+        return this;
+    }
+    
+    
+    
+    
     /**
      * getEmission function
      *

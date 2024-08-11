@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 public class MiniProject1Test {
     private static final Scene scene = new Scene("MiniProject1");
-
+    boolean bvh = false;
+    
     private Geometries constructBoardSlots() {
         boolean is_white;
         Geometries result = new Geometries();
@@ -55,7 +56,7 @@ public class MiniProject1Test {
                                                 .setkD(0.2)
                                                 .setkS(0.5)
                                                 .setShininess(60)
-                                )
+                                ).setBVH(bvh)
                 );
 
         // Second Player (Red)
@@ -69,7 +70,7 @@ public class MiniProject1Test {
                                                 .setkD(0.2)
                                                 .setkS(0.5)
                                                 .setShininess(60)
-                                )
+                                ).setBVH(bvh)
                 );
 
         return result;

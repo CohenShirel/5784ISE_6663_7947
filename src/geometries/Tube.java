@@ -11,10 +11,33 @@ public class Tube extends Geometry{
     protected double _radius;
 
     public Tube(Ray axisRay, double radius) {
+    	  //if bvh improvement is used
+        if (BVH){
+            //create bounding box
+            createBoundingBox();
+        }
         _axisRay = axisRay;
         _radius = radius;
     }
 
+    @Override
+    public void createBoundingBox() {
+        //we never fully implemented tube, so this is never used
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public String toString() {
         return "Tube{" +
